@@ -302,10 +302,3 @@ function RandomAction() {
         "direccion": direccion
     };
 }
-
-
-function RoiMola() {
-    console.log("Roi mola mucho");
-}
-
-RoiMola();
