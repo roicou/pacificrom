@@ -58,7 +58,7 @@ function ColocarPjAleatorio(tablero, personaje) {
 
 
 /**
- * @description Da un número entero entre 0 y la coordenada máxima que tengamos (X o Y)
+ * @description Da un número entero entre 0 y la coordenada máxima que tengamos (X o Y) //Git prueba
  * @param {number} maximo Coordenada máxima 
  * @returns Número
  */
