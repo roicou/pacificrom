@@ -63,7 +63,7 @@ function ColocarPjAleatorio(tablero, personaje) {
  * @returns Número
  */
 function CoordenadasAleatorias(maximo) {
-    return Math.floor(Math.random() * (maximo, 0));
+    return Math.floor(Math.random() * maximo);
 }
 
 /**
