@@ -1,4 +1,4 @@
-//estamos todos 2
+//estamos todos
 
 "use strict";
 /**
@@ -283,4 +283,8 @@ function Tick(tablero) {
     }
     ImprimirTablero(tablero);
     console.log("----------------------------------------");
+}
+
+function RandomAction() {
+
 }
