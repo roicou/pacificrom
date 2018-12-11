@@ -1,5 +1,3 @@
-//estamos todos
-
 "use strict";
 /**
  * @file
@@ -279,10 +277,13 @@ function Tick(tablero) {
     for (let y = 0; y < tablero.length; y++) {
         for (let x = 0; x < tablero[y].length; x++) {
             if (tablero[y][x].in[0] != null) {
+                console.log("bu")
+                console.log(tablero[y][x].in[0].next);
+                console.log("ba")
                 acciones.push({
                     "x": x,
                     "y": y,
-                    "next": tablero[y][x].in[0].next
+                    "next": tablero[y][x].in[0].next()
                 });
             }
         }
