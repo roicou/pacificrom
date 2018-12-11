@@ -282,3 +282,4 @@ function Tick(tablero) {
     ImprimirTablero(tablero);
     console.log("----------------------------------------");
 }
+
