@@ -1,5 +1,3 @@
-//Probando 5
-
 "use strict";
 /**
  * @file
