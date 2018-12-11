@@ -91,6 +91,7 @@ function MoverPersonaje(tablero, posx, posy, direccion) {
             MoviendoPersonaje(tablero, posx, posx, posy, (posy + 1));
             break;
         case 'W':
+        case 'O':
             MoviendoPersonaje(tablero, posx, (posx - 1), posy, posy);
             break;
     }
@@ -286,5 +287,20 @@ function Tick(tablero) {
 }
 
 function RandomAction() {
-
+    let random = Math.random();
+    let accion = "moverse";
+    let direccion = "";
+    if(random < 0.25){
+        direccion = "N";
+    } else if(random < 0.5){
+        direccion = "S";
+    } else if(random < 0.75){
+        direccion = "E";
+    } else {
+        direccion = "W";
+    }
+    return {
+        "accion": accion,
+        "direccion": direccion
+    };
 }
