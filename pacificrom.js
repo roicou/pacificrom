@@ -261,8 +261,12 @@ function CrearPersonaje(vida, vision, nombre, funcionIA) {
  * @description Ejecuta la acción de un personaje
  * @param {Object} accion El objeto con la acción del personaje
  */
-function EjecutaAccion(accion) {
-
+function EjecutaAccion(accion, tablero) {
+    console.log(accion.next);
+    return;
+    if(accion.next.accion == "moverse"){
+        MoverPersonaje(tablero, accion.x, accion.y, accion.direccion);
+    }
 }
 
 /**
@@ -273,14 +277,18 @@ function EjecutaAccion(accion) {
 function Tick(tablero) {
     let acciones = []; 
     for (let y = 0; y < tablero.length; y++) {
-        for (let x = 0; x < tablero[x].length; x++) {
+        for (let x = 0; x < tablero[y].length; x++) {
             if (tablero[y][x].in[0] != null) {
-                acciones.push(tablero[y][x].in[0].next);
+                acciones.push({
+                    "x": x,
+                    "y": y,
+                    "next": tablero[y][x].in[0].next
+                });
             }
         }
     }
     for(let accion of acciones) {
-        EjecutaAccion(accion);
+        EjecutaAccion(accion, tablero);
     }
     ImprimirTablero(tablero);
     console.log("----------------------------------------");
@@ -304,3 +312,5 @@ function RandomAction() {
         "direccion": direccion
     };
 }
+ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emilio", RandomAction));
+Tick(tablero);
