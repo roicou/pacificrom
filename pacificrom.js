@@ -1,6 +1,4 @@
-//Probando 8
-//Prueba 2
-//sigo probando
+//estamos todos
 
 "use strict";
 /**
