@@ -139,8 +139,8 @@ function ImprimirTablero(tablero) {
         }
         //console.log();
         console.log(imprime);
-        console.log("----------------------------------------");
     }
+    console.log("----------------------------------------");
 }
 
 
@@ -259,7 +259,7 @@ function CrearPersonaje(vida, vision, nombre, funcionIA) {
  */
 function EjecutaAccion(accion, tablero) {
     if(accion.next.accion == "moverse"){
-        MoverPersonaje(tablero, accion.x, accion.y, accion.direccion);
+        MoverPersonaje(tablero, accion.x, accion.y, accion.next.direccion);
     }
 }
 
