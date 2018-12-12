@@ -8,8 +8,18 @@
  * Vamos a crear un juego y todo lo demás se irá viendo sobre la marcha.
 */
 
+//1º Creamos el tablero
 let tablero = CrearTablero(20, 20);
+
+//2º Colocamos un personaje en el tablero
+ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emilio", RandomAction));
+
+//3º Imprimimos el tablero
 ImprimirTablero(tablero);
+
+//4º Ejecutamos el Tick (esto mostrará otro tablero)
+Tick(tablero);
+
 
 /**
  * @description Función que crea un tablero indicándole el número de filas y columnas (X, Y). El tablero 
@@ -101,7 +111,6 @@ function MoverPersonaje(tablero, posx, posy, direccion) {
  * @param {Number} posy_final Número de columna del tablero a donde vamos a mover el personaje (Y)
  */
 function MoviendoPersonaje(tablero, posx_original, posx_final, posy_original, posy_final) {
-    //console.log(posx_original, posx_final, posy_original, posy_final);
     if (posx_final >= 0 && posy_final >= 0 && posx_final < tablero[0].length && posy_final < tablero.length) {
         if (tablero[posy_final][posx_final].in[0] == null && tablero[posy_final][posx_final].tipo == "agua") {
             tablero[posy_final][posx_final].in[0] = tablero[posy_original][posx_original].in[0];
@@ -137,7 +146,6 @@ function ImprimirTablero(tablero) {
                 imprime += "null\t|";
             }
         }
-        //console.log();
         console.log(imprime);
     }
     console.log("----------------------------------------");
@@ -273,7 +281,6 @@ function Tick(tablero) {
     for (let y = 0; y < tablero.length; y++) {
         for (let x = 0; x < tablero[y].length; x++) {
             if (tablero[y][x].in[0] != null) {
-                //console.log(tablero[y][x].in[0].next);
                 acciones.push({
                     "x": x,
                     "y": y,
@@ -306,5 +313,5 @@ function RandomAction() {
         "direccion": direccion
     };
 }
-ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emilio", RandomAction));
-Tick(tablero);
+
+
