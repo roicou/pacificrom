@@ -9,7 +9,6 @@
 */
 
 let tablero = CrearTablero(20, 20);
-ColocarPjAleatorio(tablero, "Roi");
 ImprimirTablero(tablero);
 
 /**
@@ -260,8 +259,6 @@ function CrearPersonaje(vida, vision, nombre, funcionIA) {
  * @param {Object} accion El objeto con la acción del personaje
  */
 function EjecutaAccion(accion, tablero) {
-    console.log(accion.next);
-    return;
     if(accion.next.accion == "moverse"){
         MoverPersonaje(tablero, accion.x, accion.y, accion.direccion);
     }
@@ -277,9 +274,7 @@ function Tick(tablero) {
     for (let y = 0; y < tablero.length; y++) {
         for (let x = 0; x < tablero[y].length; x++) {
             if (tablero[y][x].in[0] != null) {
-                console.log("bu")
-                console.log(tablero[y][x].in[0].next);
-                console.log("ba")
+                //console.log(tablero[y][x].in[0].next);
                 acciones.push({
                     "x": x,
                     "y": y,
@@ -289,7 +284,7 @@ function Tick(tablero) {
         }
     }
     for(let accion of acciones) {
-        EjecutaAccion(accion, tablero);
+        //EjecutaAccion(accion, tablero);
     }
     ImprimirTablero(tablero);
     console.log("----------------------------------------");
