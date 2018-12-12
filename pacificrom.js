@@ -11,16 +11,21 @@
 //1º Creamos el tablero
 let tablero = CrearTablero(20, 20);
 
-//2º Colocamos un personaje en el tablero
-ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emilio", RandomAction));
+//2º Colocamos personajes en el tablero
+ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emi", RandomAction));
+ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Roi", RandomAction));
+ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Juan", RandomAction));
 
 //3º Imprimimos el tablero
 ImprimirTablero(tablero);
 
 //4º Ejecutamos el Tick (esto mostrará otro tablero)
-Tick(tablero);
+setInterval(Tick, 2000, tablero);
+//Tick(tablero);
 
-
+//**********************************************************************************************************
+//                               EMPIEZA EL CÓDIGO
+//**********************************************************************************************************
 /**
  * @description Función que crea un tablero indicándole el número de filas y columnas (X, Y). El tablero 
  * viene en forma de array de ararys. El primer nivel es para la fila y cada casilla de columna irá en el 
