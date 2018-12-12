@@ -139,6 +139,7 @@ function ImprimirTablero(tablero) {
         }
         //console.log();
         console.log(imprime);
+        console.log("----------------------------------------");
     }
 }
 
@@ -285,7 +286,6 @@ function Tick(tablero) {
         EjecutaAccion(accion, tablero);
     }
     ImprimirTablero(tablero);
-    console.log("----------------------------------------");
 }
 
 function RandomAction() {
