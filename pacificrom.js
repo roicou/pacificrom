@@ -46,8 +46,6 @@ function CrearTablero(filas, columnas) {
 function ColocarPjAleatorio(tablero, personaje) {
     let posx = CoordenadasAleatorias(tablero[0].length);
     let posy = CoordenadasAleatorias(tablero.length);
-    console.log(posx);
-    console.log(posy);
     if (tablero[posy][posx].tipo == "agua" && tablero[posy][posx].in[0] == null) {
         tablero[posy][posx].in[0] = personaje;
     } else {
@@ -284,7 +282,7 @@ function Tick(tablero) {
         }
     }
     for(let accion of acciones) {
-        //EjecutaAccion(accion, tablero);
+        EjecutaAccion(accion, tablero);
     }
     ImprimirTablero(tablero);
     console.log("----------------------------------------");
