@@ -12,10 +12,9 @@
 let tablero = CrearTablero(20, 20);
 
 //2º Colocamos personajes en el tablero
-ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Emi", RandomAction));
-ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Roi", RandomAction));
-ColocarPjAleatorio(tablero, CrearPersonaje(50,5,"Juan", RandomAction));
-
+ColocarPjAleatorio(tablero, CrearPersonaje("Emi", "barco1", RandomAction));
+ColocarPjAleatorio(tablero, CrearPersonaje("Roi", "barco1", RandomAction));
+ColocarPjAleatorio(tablero, CrearPersonaje("Juan", "barco1", RandomAction));
 //3º Imprimimos el tablero
 ImprimirTablero(tablero);
 
@@ -216,17 +215,17 @@ function SeleccionarTipo(tierra) {
  * @param {number} rango Rango de visión del personaje
  * @returns {Array} Nuevo tablero donde todo lo que no puede ver el personaje es null
  */
-function VisionPersonaje(tablero, posx, posy, rango){
+function VisionPersonaje(tablero, posx, posy, rango) {
     let tableropersonal = [];
-    for(let y = 0; y < tablero.length; y++){
+    for (let y = 0; y < tablero.length; y++) {
         tableropersonal.push([])
-       for(let x = 0; x < tablero[y].length; x++){
-           if(RadioAccion(y, x, posx, posy, rango)){
-            tableropersonal[y].push(tablero[y][x]);
-           } else {
-            tableropersonal[y].push(null);
-           }
-       }
+        for (let x = 0; x < tablero[y].length; x++) {
+            if (RadioAccion(y, x, posx, posy, rango)) {
+                tableropersonal[y].push(tablero[y][x]);
+            } else {
+                tableropersonal[y].push(null);
+            }
+        }
     }
     return tableropersonal;
 }
@@ -239,9 +238,9 @@ function VisionPersonaje(tablero, posx, posy, rango){
  * @param {Number} rango Radio de acción del personaje
  * @returns {Boolean} True si la casilla está en rango, False si no.
  */
-function RadioAccion(tablerox, tableroy, posx, posy, rango){
+function RadioAccion(tablerox, tableroy, posx, posy, rango) {
     //if((tablerox >= posx - rango && tablerox <= posx + rango) && (tableroy >= posy - rango && tableroy <= posy + rango)){
-    if(Math.pow(posx - tablerox, 2) + Math.pow(posy - tableroy,2) <= Math.pow(rango, 2)){
+    if (Math.pow(posx - tablerox, 2) + Math.pow(posy - tableroy, 2) <= Math.pow(rango, 2)) {
         return true;
     } else {
         return false;
@@ -250,28 +249,109 @@ function RadioAccion(tablerox, tableroy, posx, posy, rango){
 
 /**
  * @description Crea un personaje con los parámetros dados
- * @param {Number} vida Vida del personaje
- * @param {Number} vision Distancia de visión del personaje
  * @param {String} nombre String con el nombre del personaje
+ * @param {String} tipo Tipo de  barco
  * @param {Function} funcionIA Función con la IA del personake
  * @returns {Object} Objeto con los parámetros del personaje.
  */
-function CrearPersonaje(vida, vision, nombre, funcionIA) {
-    return {
-        "tipo": "personaje",
-        "vida": vida,
-        "vision": vision,
-        "nombre": nombre,
-        "next": funcionIA
-    };
+function CrearPersonaje(nombre, tipo, funcionIA) {
+    //disparo curvo y disparo tenso
+    switch (tipo) {
+        case "barco1":
+        default:
+            return {
+                "nombre": nombre,
+                "velocidad": 10,
+                "vida": 100,
+                "vision": 5,
+                "disparo": "curvo",
+                "rango": 3,
+                "pupa": 50,
+                "orientacion": OrientacionAleatoria(),
+                "next": funcionIA
+            }
+    }
 }
+
+/**
+ * 
+ * TAREA PENDIENTE!!!!!!! ************************************************************************************************************************************
+ * 
+ * HAY QUE COMPROBAR EN EL SWITCH DONDE VEMOS SI SE VA DE RANGO QUE NO SE VAYA DEL TABLERO!!!!!!!!
+ * 
+ * 
+ * 
+ * 
+ * @param {Array} tablero 
+ * @param {Number} x 
+ * @param {Number} y 
+ * @param {Number} objetivo_x 
+ * @param {Number} objetivo_y 
+ */
+function Disparar(tablero, x, y, objetivo_x, objetivo_y) {
+    switch (tablero[y][x].in[0].orientacion) {
+        case "N":
+            if (tablero[y][x].in[0].rango < (y - objetivo_y)) {
+                objetivo_y = y - tablero[y][x].in[0].rango;
+            }
+            break;
+        case "S":
+            if (tablero[y][x].in[0].rango < (objetivo_y - y)) {
+                objetivo_y = y + tablero[y][x].in[0].rango;
+            }
+            break;
+        case "E":
+            if (tablero[y][x].in[0].rango < (objetivo_x - x)) {
+                objetivo_x = x + tablero[y][x].in[0].rango;
+            }
+            break;
+        case "W":
+            if (tablero[y][x].in[0].rango < (x - objetivo_x)) {
+                objetivo_x = x - tablero[y][x].in[0].rango;
+            }
+            break;
+    }
+    switch (tablero[y][x].in[0].disparo) {
+        case "curvo":
+            if (tablero[objetivo_y][objetivo_x].in[0] != null) {
+                tablero[objetivo_y][objetivo_x].in[0].vida -= tablero[y][x].in[0].pupa;
+            }
+            break;
+        case "tenso":
+            switch (tablero[y][x].in[0].orientacion) {
+                case "N":
+                    for (let misil = y + 1; misil <= objetivo_y; misil++) {
+                        if (misil > 0 && misil < tablero.length) {
+                            if (tablero[misil][x].in[0] != null) {
+                                tablero[misil][x].in[0].vida <= tablero[y][x].in[0].pupa;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+                case "S":
+                    for (let misil = y - 1; misil >= objetivo_y; misil--) {
+                        if (tablero[misil][x].in[0] != null) {
+                            tablero[misil][x].in[0].vida <= tablero[y][x].in[0].pupa;
+                            break;
+                        }
+                    }
+                    break;
+            }
+    }
+}
+
+
+
 
 /**
  * @description Ejecuta la acción de un personaje
  * @param {Object} accion El objeto con la acción del personaje
  */
 function EjecutaAccion(accion, tablero) {
-    if(accion.next.accion == "moverse"){
+    if (accion.next.accion == "moverse") {
         MoverPersonaje(tablero, accion.x, accion.y, accion.next.direccion);
     }
 }
@@ -282,7 +362,7 @@ function EjecutaAccion(accion, tablero) {
  * @param {Array} tablero Recibe el tablero de juego
  */
 function Tick(tablero) {
-    let acciones = []; 
+    let acciones = [];
     for (let y = 0; y < tablero.length; y++) {
         for (let x = 0; x < tablero[y].length; x++) {
             if (tablero[y][x].in[0] != null) {
@@ -294,29 +374,73 @@ function Tick(tablero) {
             }
         }
     }
-    for(let accion of acciones) {
+    for (let accion of acciones) {
         EjecutaAccion(accion, tablero);
     }
     ImprimirTablero(tablero);
 }
 
+/**
+ * @description Mueve un pj de forma aleatoria
+ * @returns {Object} 
+ */
 function RandomAction() {
-    let random = Math.random();
     let accion = "moverse";
-    let direccion = "";
-    if(random < 0.25){
-        direccion = "N";
-    } else if(random < 0.5){
-        direccion = "S";
-    } else if(random < 0.75){
-        direccion = "E";
-    } else {
-        direccion = "W";
-    }
     return {
         "accion": accion,
-        "direccion": direccion
+        "direccion": OrientacionAleatoria()
     };
 }
 
+/**
+ * @description Devuelve una orientación aleatoria: N, S, E, W
+ * @returns {string} N, S, E, W
+ */
+function OrientacionAleatoria() {
+    let random = Math.random();
+    if (random < 0.25) {
+        return "N";
+    } else if (random < 0.5) {
+        return "S";
+    } else if (random < 0.75) {
+        return "E";
+    } else {
+        return "W";
+    }
+}
 
+function GirarPersonaje(tablero, x, y, giro) {
+    if (tablero[y][x].in[0] != null) {
+        switch (tablero[y][x].in[0].orientacion) {
+            case "N":
+                if (giro == "L") {
+                    tablero[y][x].in[0].orientacion = "W";
+                } else {
+                    tablero[y][x].in[0].orientacion = "E";
+                }
+                break;
+            case "E":
+                if (giro == "L") {
+                    tablero[y][x].in[0].orientacion = "N";
+                } else {
+                    tablero[y][x].in[0].orientacion = "S";
+                }
+                break;
+            case "S":
+                if (giro == "L") {
+                    tablero[y][x].in[0].orientacion = "E";
+                } else {
+                    tablero[y][x].in[0].orientacion = "W";
+                }
+                break;
+            case "W":
+            case "O":
+                if (giro == "L") {
+                    tablero[y][x].in[0].orientacion = "S";
+                } else {
+                    tablero[y][x].in[0].orientacion = "N";
+                }
+                break;
+        }
+    }
+}
