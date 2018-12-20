@@ -9,7 +9,7 @@
 */
 
 //1º Creamos el tablero
-let tablero = CrearTablero(20, 20);
+let tablero = CrearTablero(10, 20);
 
 //2º Colocamos personajes en el tablero
 ColocarPjAleatorio(tablero, CrearPersonaje("Emi", "barco1", RandomAction));
