@@ -10,9 +10,6 @@
 
 //1º Creamos el tablero
 let tablero = CrearTablero(20, 20);
-console.log("Hola mundo");
-
-console.log("Mi hola mundo es mejor");
 
 //2º Colocamos personajes en el tablero
 ColocarPjAleatorio(tablero, CrearPersonaje("Emi", "barco1", RandomAction));
