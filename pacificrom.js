@@ -8,7 +8,7 @@
  * Vamos a crear un juego y todo lo demás se irá viendo sobre la marcha.
 */
 
-//1º Creamos el tablero
+//1º Creamos el 
 let tablero = CrearTablero(20, 20);
 
 //2º Colocamos personajes en el tablero
