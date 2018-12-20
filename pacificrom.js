@@ -8,8 +8,8 @@
  * Vamos a crear un juego y todo lo demás se irá viendo sobre la marcha.
 */
 
-//1º Creamos el 
-let tablero = CrearTablero(20, 20);
+//1º Creamos el tablero
+let tablero = CrearTablero(20, 10);
 
 //2º Colocamos personajes en el tablero
 ColocarPjAleatorio(tablero, CrearPersonaje("Emi", "barco1", RandomAction));
