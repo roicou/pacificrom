@@ -446,3 +446,6 @@ function GirarPersonaje(tablero, x, y, giro) {
         }
     }
 }
+
+
+console.log("Mi hola mundo está al final");
