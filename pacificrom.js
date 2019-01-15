@@ -14,4 +14,4 @@ let Personaje = require('./class/personaje.js');
 
 let partida = new Tablero.Tablero(20, 20);
 
-partida.imprimeTablero;
+partida.tablero;

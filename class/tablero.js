@@ -1,4 +1,12 @@
 class Tablero {
+    /**
+     * Función que crea un tablero indicándole el número de filas y columnas (X, Y). El tablero 
+     * viene en forma de array de ararys. El primer nivel es para la fila y cada casilla de columna irá en el 
+     * segundo array.
+     * @param {number} filas Número de filas del tablero (X)
+     * @param {number} columnas Número de columnas del tablero (Y)
+     * @returns {Array}    
+     */
     constructor(filas, columnas) {
         this.tablero = [];
         for (let y = 0; y < filas; y++) {
@@ -17,7 +25,7 @@ class Tablero {
         }
     }
     /**
-     * @description Genera un objeto con el atributo "tipo" que le digamos.
+     * Genera un objeto con el atributo "tipo" que le digamos.
      * @param {string} tipo Tipo de terreno
      * @returns {Object}    
      */
@@ -29,7 +37,7 @@ class Tablero {
         };
     }
     /**
-     * @description Genera de forma aleatoria un tipo de terreno a escoger entre "agua", "tierra" o 
+     * Genera de forma aleatoria un tipo de terreno a escoger entre "agua", "tierra" o 
      * "iceberg". <br/> Hay un 95% de probabilidades de que salga "agua" y un 5% para los 
      * otros elementos.
      * @param {Number} tierra 0 = No hay agua. 1 = Hay agua arriba o izquierda. 2 = Hay agua arriba y izquierda
@@ -66,12 +74,37 @@ class Tablero {
         }
         return tipo;
     }
+
     /**
-     * @description Función que imprime de forma "bonita" el tablero para que sea visible. Puede ser el
+     * Coloca un personaje en unas coordenadas aleatorias.
+     * @param {Array} tablero Tablero del juego 
+     * @param {Object} personaje Personaje a añadir
+     */
+    ColocarPjAleatorio(personaje) {
+        let posx = this.CoordenadasAleatorias(this.tablero[0].length);
+        let posy = this.CoordenadasAleatorias(this.tablero.length);
+        if (this.tablero[posy][posx].tipo == "agua" && this.tablero[posy][posx].in[0] == null) {
+            this.tablero[posy][posx].in[0] = personaje;
+        } else {
+            ColocarPjAleatorio(personaje);
+        }
+    }
+
+    /**
+     * Da un número entero entre 0 y la coordenada máxima que tengamos (X o Y)
+     * @param {number} maximo Coordenada máxima 
+     * @returns Número
+     */
+    CoordenadasAleatorias(maximo) {
+        return Math.floor(Math.random() * maximo);
+    }
+
+    /**
+     * Getting que imprime de forma "bonita" el tablero para que sea visible. Puede ser el
      * tablero entero o el que puede ver un personaje.
      * @param {Array} tablero Tablero que queremos imprimir.
      */
-    get imprimeTablero() {
+    get tablero() {
         for (let y of this.tablero) {
             let imprime = "|";
             for (let x of y) {
