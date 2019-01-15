@@ -87,7 +87,7 @@ class Tablero {
         if (this.tablero[posy][posx].tipo == "agua" && this.tablero[posy][posx].in[0] == null) {
             this.tablero[posy][posx].in[0] = personaje;
         } else {
-            ColocarPjAleatorio(personaje);
+            this.ColocarPjAleatorio(personaje);
         }
     }
 
@@ -103,7 +103,7 @@ class Tablero {
     /**
      * @description Recorre todas las casillas del tablero buscando un personaje. Hace que ese personaje 
      * se mueva aleatoriamente mediante la función {@link MoverPersonaje}.
-     * @param {Array} tablero Recibe el tablero de juego
+     * @param {Object} self Recibe el tablero de juego, porque al usar el setInterval se pierde.
      */
     Tick(self) {
         self._acciones = [];
@@ -111,6 +111,7 @@ class Tablero {
         for (let y = 0; y < self.tablero.length; y++) {
             for (let x = 0; x < self.tablero[y].length; x++) {
                 if (self.tablero[y][x].in[0] != null) {
+                    self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
                     self._acciones.push({
                         "x": x,
                         "y": y,
@@ -127,6 +128,45 @@ class Tablero {
     }
 
     /**
+     * @description Genera un tablero para un personaje concreto
+     * @param {number} posx Coordenada "x" del personaje
+     * @param {number} posy Coordenada "y" del personaje
+     * @returns {Array} Nuevo tablero donde todo lo que no puede ver el personaje es null
+     */
+    VisionPersonaje(posx, posy) {
+        let tableropersonal = [];
+        for (let y = 0; y < this.tablero.length; y++) {
+            tableropersonal.push([])
+            for (let x = 0; x < this.tablero[y].length; x++) {
+                if (this.RadioAccion(y, x, posx, posy, this.tablero[posy][posx].in[0].rango)) {
+                    tableropersonal[y].push(this.tablero[y][x]);
+                } else {
+                    tableropersonal[y].push(null);
+                }
+            }
+        }
+        return tableropersonal;
+    }
+
+    /**
+     * @description Indica si una casilla está dentro de un rango de acción
+     * @param {Number} tablerox Posición X a comprobar
+     * @param {Number} tableroy Posición Y a comprobar
+     * @param {Number} posx Posición X del personaje
+     * @param {Number} posy Posición Y del personaje
+     * @param {Number} rango Radio de acción del personaje
+     * @returns {Boolean} True si la casilla está en rango, False si no.
+     */
+    RadioAccion(tablerox, tableroy, posx, posy, rango) {
+        //if((tablerox >= posx - rango && tablerox <= posx + rango) && (tableroy >= posy - rango && tableroy <= posy + rango)){
+        if (Math.pow(posx - tablerox, 2) + Math.pow(posy - tableroy, 2) <= Math.pow(rango, 2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @description Ejecuta la acción de un personaje
      * @param {Object} accion El objeto con la acción del personaje
      */
@@ -139,7 +179,6 @@ class Tablero {
 
     /**
      * @description Mueve un personaje sobre el tablero. El movimiento lo realiza {@link moviendo_personaje}
-     * @param {Array} tablero Tablero sobre el que vamos a moveor el personaje
      * @param {Number} posx Número de fila del tablero donde está el personaje (X)
      * @param {Number} posy Número de columna del tablero donde está el personaje (Y)
      * @param {String} direccion Dirección a la que queremos mover el personaje: <br/><ul>
@@ -186,7 +225,6 @@ class Tablero {
     /**
      * Getting que imprime de forma "bonita" el tablero para que sea visible. Puede ser el
      * tablero entero o el que puede ver un personaje.
-     * @param {Array} tablero Tablero que queremos imprimir.
      */
     get imprime() {
         for (let y of this.tablero) {
