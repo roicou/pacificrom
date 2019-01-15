@@ -12,6 +12,7 @@ class Personaje {
         this._funcionIA = funcionIA;
         this.nombre = nombre;
         this.orientacion = this.OrientacionAleatoria();
+        this._espera = 0;
         switch (tipo) {
             case "barco1":
             default:
@@ -42,6 +43,16 @@ class Personaje {
     update(map){
         this._map = map;
     }
+    set espera(n) {
+        this._espera = n;
+    }
+    get espera() {
+        if(this._espera > 0) {
+            this._espera--;
+        }
+        return this._espera;
+    }
+
     /**
      * No sé muy bien cómo va esto XD
      * @param {Function} funcionIA
