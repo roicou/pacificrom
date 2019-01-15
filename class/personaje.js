@@ -7,8 +7,9 @@ class Personaje {
      * @param {Function} funcionIA Función con la IA del personake
      * @returns {Object} Objeto con los parámetros del personaje.
      */
-    contructor(nombre, tipo) {
+    constructor(nombre, tipo, funcionIA) {
         //disparo curvo y disparo tenso
+        this._funcionIA = funcionIA;
         switch (tipo) {
             case "barco1":
             default:
@@ -44,8 +45,8 @@ class Personaje {
      * No sé muy bien cómo va esto XD
      * @param {Function} funcionIA
      */
-    get next(funcionIA) {
-        funcionIA;
+    get next() {
+        this._funcionIA;
     }
 }
 

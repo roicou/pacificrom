@@ -1,3 +1,4 @@
+"use strict";
 class Tablero {
     /**
      * Función que crea un tablero indicándole el número de filas y columnas (X, Y). El tablero 
@@ -100,11 +101,45 @@ class Tablero {
     }
 
     /**
+     * @description Recorre todas las casillas del tablero buscando un personaje. Hace que ese personaje 
+     * se mueva aleatoriamente mediante la función {@link MoverPersonaje}.
+     * @param {Array} tablero Recibe el tablero de juego
+     */
+    Tick() {
+        this._acciones = [];
+        for (let y = 0; y < this.tablero.length; y++) {
+            for (let x = 0; x < this.tablero[y].length; x++) {
+                if (this.tablero[y][x].in[0] != null) {
+                    this._acciones.push({
+                        "x": x,
+                        "y": y,
+                        "next": this.tablero[y][x].in[0].next()
+                    });
+                }
+            }
+        }
+        for (let accion of this._acciones) {
+            partida.EjecutaAccion(accion);
+        }
+        partida.tablero;
+    }
+
+    /**
+     * @description Ejecuta la acción de un personaje
+     * @param {Object} accion El objeto con la acción del personaje
+     */
+    EjecutaAccion(accion) {
+        if (accion.next.accion == "moverse") {
+            MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+        }
+    }
+
+    /**
      * Getting que imprime de forma "bonita" el tablero para que sea visible. Puede ser el
      * tablero entero o el que puede ver un personaje.
      * @param {Array} tablero Tablero que queremos imprimir.
      */
-    get tablero() {
+    get imprime() {
         for (let y of this.tablero) {
             let imprime = "|";
             for (let x of y) {
