@@ -16,7 +16,6 @@ let partida = new Tablero.Tablero(20, 20);
 partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RandomAction));
 
 //let pj = new Personaje.Personaje('Roi', 'barco1', RandomAction);
-//console.log(pj);
 
 partida.imprime;
 
@@ -50,3 +49,8 @@ function OrientacionAleatoria() {
 }
 
 
+/*
+setInterval pierde la referencia al objeto. Solo llama a la función, dejando a un lado el objeto en el que 
+estaba la función
+*/
+setInterval(partida.Tick, 2000, partida);

@@ -105,23 +105,25 @@ class Tablero {
      * se mueva aleatoriamente mediante la función {@link MoverPersonaje}.
      * @param {Array} tablero Recibe el tablero de juego
      */
-    Tick() {
-        this._acciones = [];
-        for (let y = 0; y < this.tablero.length; y++) {
-            for (let x = 0; x < this.tablero[y].length; x++) {
-                if (this.tablero[y][x].in[0] != null) {
-                    this._acciones.push({
+    Tick(self) {
+        self._acciones = [];
+        //console.log(self.tablero);
+        for (let y = 0; y < self.tablero.length; y++) {
+            for (let x = 0; x < self.tablero[y].length; x++) {
+                if (self.tablero[y][x].in[0] != null) {
+                    self._acciones.push({
                         "x": x,
                         "y": y,
-                        "next": this.tablero[y][x].in[0].next()
+                        "next": self.tablero[y][x].in[0].next
                     });
                 }
             }
         }
-        for (let accion of this._acciones) {
-            partida.EjecutaAccion(accion);
+        for (let accion of self._acciones) {
+            self.EjecutaAccion(accion);
+            //console.log(accion);
         }
-        partida.tablero;
+        self.imprime;
     }
 
     /**
@@ -130,7 +132,54 @@ class Tablero {
      */
     EjecutaAccion(accion) {
         if (accion.next.accion == "moverse") {
-            MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+            this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+            //console.log('eeeeeeee');
+        }
+    }
+
+    /**
+     * @description Mueve un personaje sobre el tablero. El movimiento lo realiza {@link moviendo_personaje}
+     * @param {Array} tablero Tablero sobre el que vamos a moveor el personaje
+     * @param {Number} posx Número de fila del tablero donde está el personaje (X)
+     * @param {Number} posy Número de columna del tablero donde está el personaje (Y)
+     * @param {String} direccion Dirección a la que queremos mover el personaje: <br/><ul>
+     * <li>N -> Norte</li>
+     * <li>E -> Este</li>
+     * <li>S -> Sur</li>
+     * <li>W -> Oeste</li>
+     */
+    MoverPersonaje(posx, posy, direccion) {
+        switch (direccion) {
+            case 'N':
+                this.MoviendoPersonaje(posx, posx, posy, (posy - 1));
+                break;
+            case 'E':
+                this.MoviendoPersonaje(posx, (posx + 1), posy, posy);
+                break;
+            case 'S':
+                this.MoviendoPersonaje(posx, posx, posy, (posy + 1));
+                break;
+            case 'W':
+            case 'O':
+                this.MoviendoPersonaje(posx, (posx - 1), posy, posy);
+                break;
+        }
+    }
+
+    /**
+     * @description Realiza el movimiento de {@link mover_personaje} hacienndo las comprobaciones pertinentes. <br/><br/>
+     * Se comprueba si existe la posición a la que nos queremos mover y si está vacía.
+     * @param {Number} posx_original Número de fila del tablero donde está el personaje (X)
+     * @param {Number} posx_final Número de fila del tablero a donde vamos a mover el personaje (X)
+     * @param {Number} posy_original Número de columna del tablero donde está el personaje (Y)
+     * @param {Number} posy_final Número de columna del tablero a donde vamos a mover el personaje (Y)
+     */
+    MoviendoPersonaje(posx_original, posx_final, posy_original, posy_final) {
+        if (posx_final >= 0 && posy_final >= 0 && posx_final < this.tablero[0].length && posy_final < this.tablero.length) {
+            if (this.tablero[posy_final][posx_final].in[0] == null && this.tablero[posy_final][posx_final].tipo == "agua") {
+                this.tablero[posy_final][posx_final].in[0] = this.tablero[posy_original][posx_original].in[0];
+                this.tablero[posy_original][posx_original].in[0] = null;
+            }
         }
     }
 

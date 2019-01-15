@@ -10,19 +10,17 @@ class Personaje {
     constructor(nombre, tipo, funcionIA) {
         //disparo curvo y disparo tenso
         this._funcionIA = funcionIA;
+        this.nombre = nombre;
+        this.orientacion = this.OrientacionAleatoria();
         switch (tipo) {
             case "barco1":
             default:
-                return {
-                    "nombre": nombre,
-                    "velocidad": 10,
-                    "vida": 100,
-                    "vision": 5,
-                    "disparo": "curvo",
-                    "rango": 3,
-                    "pupa": 50,
-                    "orientacion": this.OrientacionAleatoria()
-                }
+                this.velocidad = 10;
+                this.vida = 100;
+                this.vision = 5;
+                this.disparo = "curvo";
+                this.rango = 3;
+                this.pupa = 50;
         }
     }
     /**
@@ -41,12 +39,15 @@ class Personaje {
             return "W";
         }
     }
+    update(map){
+        this._map = map;
+    }
     /**
      * No sé muy bien cómo va esto XD
      * @param {Function} funcionIA
      */
     get next() {
-        this._funcionIA;
+        return this._funcionIA(this._map);
     }
 }
 
