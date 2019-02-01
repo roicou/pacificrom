@@ -319,11 +319,14 @@ function Disparar(tablero, x, y, objetivo_x, objetivo_y) {
             break;
         case "tenso":
             switch (tablero[y][x].in[0].orientacion) {
+                //creo que esta al reves las direcciones pues si apunta al norte la y debería
+                //disminuir y no aumentar, y al reves para el sur.
+                //modifico el "<=" de las acciones por "-="
                 case "N":
                     for (let misil = y + 1; misil <= objetivo_y; misil++) {
                         if (misil > 0 && misil < tablero.length) {
                             if (tablero[misil][x].in[0] != null) {
-                                tablero[misil][x].in[0].vida <= tablero[y][x].in[0].pupa;
+                                tablero[misil][x].in[0].vida -= tablero[y][x].in[0].pupa;
                                 break;
                             }
                         } else {
@@ -334,11 +337,17 @@ function Disparar(tablero, x, y, objetivo_x, objetivo_y) {
                 case "S":
                     for (let misil = y - 1; misil >= objetivo_y; misil--) {
                         if (tablero[misil][x].in[0] != null) {
-                            tablero[misil][x].in[0].vida <= tablero[y][x].in[0].pupa;
+                            tablero[misil][x].in[0].vida -= tablero[y][x].in[0].pupa;
                             break;
                         }
                     }
                     break;
+                case "E":
+                    for(let misil = x + 1; misil <= objetivo_x; misil++){
+                        if(tablero[y][misil].in[0] != null){
+                            tablero[y][misil].in[0].vida -= tablero[y][x].in[0].pupa;
+                        }
+                    }
             }
     }
 }
