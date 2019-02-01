@@ -107,6 +107,7 @@ class Tablero {
      */
     Tick(self) {
         self._acciones = [];
+        self._balas = [];
         //console.log(self.tablero);
         for (let y = 0; y < self.tablero.length; y++) {
             for (let x = 0; x < self.tablero[y].length; x++) {
@@ -115,16 +116,70 @@ class Tablero {
                     self._acciones.push({
                         "x": x,
                         "y": y,
+                        "espera": self.tablero[y][x].in[0].espera,
                         "next": self.tablero[y][x].in[0].next
                     });
                 }
+                if (self.tablero[y][x].in.length > 1) {
+                    for (let i = 1; i < self.tablero[y][x].in.length; i++) {
+                        self.tablero[y][x].in[i].espera--;
+                        self._balas.push(self.tablero[y][x].in[i]);
+                    }
+                }
             }
         }
-        for (let accion of self._acciones) {
-            self.EjecutaAccion(accion);
-            //console.log(accion);
+        self._acciones.sort((a, b) => {return b.espera - a.espera});
+        self._balas.sort((a, b) => {return b.espera - a.espera});
+
+        for(let i = self._acciones.length - 1; i >= 0; i--) {
+            if(self._acciones[i].espera == 0) {
+                self.EjecutaAccion(self._acciones[i].pop());
+            } else {
+                break;
+            }
         }
+
+        for(let i = self._balas.length - 1; i >= 0; i--) {
+            if(self._balas[i].espera == 0) {
+                self.MoverBala(self._balas[i]);
+            } else {
+                break;
+            }
+        }
+
         self.imprime;
+    }
+
+
+    //*****************************************************************************************************************************
+    //*****************************************************************************************************************************
+    //*****************************************************************************************************************************
+    //************************************************  VAMOS POR AQUÍ  ***********************************************************
+    //*****************************************************************************************************************************
+    //*****************************************************************************************************************************
+    //*****************************************************************************************************************************
+
+
+    /**
+     * Mueve la bala y, en caso de que toque, catapum chin pum
+     * @param {Object} bala 
+     */
+    MoverBala(bala) {
+        let temp = this.tablero[bala.y][bala.x].in;
+        switch(bala.orientacion){
+            case 'N':
+                this.tablero[bala.y][bala.x].in[temp.indexOf(bala)];
+            break;
+            case 'S':
+
+            break;
+            case 'E':
+
+            break;
+            case 'W':
+
+            break;
+        }
     }
 
     /**
@@ -242,7 +297,7 @@ class Tablero {
                     if (x.in[0] != null) {
                         imprime += "[" + x.in[0].nombre + "]";
                     }
-    
+
                     imprime += "\t|"
                 } else {
                     imprime += "null\t|";
@@ -251,6 +306,85 @@ class Tablero {
             console.log(imprime);
         }
         console.log("----------------------------------------");
+    }
+
+
+    /**
+     * Método que introduce una bala en el tablero comprobando que el objetivo es viable.
+     * @param {Array} tablero 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @param {Number} objetivo_x 
+     * @param {Number} objetivo_y 
+     * @param {String} tipo Tipo de disparo
+     * @param {Number} velocidad_disparo
+     */
+    Disparar(x, y, objetivo_x, objetivo_y, tipo, velocidad_disparo) {
+        switch (this.tablero[y][x].in[0].orientacion) {
+            case "N":
+                if (y > 0) {
+                    if (this.tablero[y][x].in[0].rango < (y - objetivo_y)) {
+                        objetivo_y = y - this.tablero[y][x].in[0].rango;
+                        if (objetivo_y < 0) {
+                            objetivo_y = 0;
+                        }
+                    }
+                    y--;
+                } else {
+                    return false;
+                }
+                break;
+            case "S":
+                if (y < this.tablero.length - 1) {
+                    if (this.tablero[y][x].in[0].rango < (objetivo_y - y)) {
+                        objetivo_y = y + this.tablero[y][x].in[0].rango;
+                        if (objetivo_y >= tablero.length) {
+                            objetivo_y = tablero.length - 1;
+                        }
+                    }
+                    y++;
+                } else {
+                    return false;
+                }
+                break;
+            case "E":
+                if (x < tablero[y].length - 1) {
+                    if (this.tablero[y][x].in[0].rango < (objetivo_x - x)) {
+                        objetivo_x = x + this.tablero[y][x].in[0].rango;
+                        if (objetivo_x >= tablero[y].length) {
+                            objetivo_x = tablero[y].length - 1;
+                        }
+                    }
+                    x++;
+                } else {
+                    return false;
+                }
+                break;
+            case "W":
+                if (x > 0) {
+                    if (this.tablero[y][x].in[0].rango < (x - objetivo_x)) {
+                        objetivo_x = x - this.tablero[y][x].in[0].rango;
+                        if (objetivo_x < 0) {
+                            objetivox = 0;
+                        }
+                    }
+                    x--;
+                } else {
+                    return false;
+                }
+                break;
+        }
+        this.tablero[y][x].in.push({
+            "tipo": tipo,
+            "velocidad_disparo": velocidad_disparo,
+            "x": x,
+            "y": y,
+            "direccion": this.tablero[y][x].in[0].orientacion,
+            "objetivo_x": objetivo_x,
+            "objetivo_y": objetivo_y,
+            "espera": velocidad_disparo
+        });
+        return true;
     }
 }
 
