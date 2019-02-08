@@ -128,19 +128,19 @@ class Tablero {
                 }
             }
         }
-        self._acciones.sort((a, b) => {return b.espera - a.espera});
-        self._balas.sort((a, b) => {return b.espera - a.espera});
+        self._acciones.sort((a, b) => { return b.espera - a.espera });
+        self._balas.sort((a, b) => { return b.espera - a.espera });
 
-        for(let i = self._acciones.length - 1; i >= 0; i--) {
-            if(self._acciones[i].espera == 0) {
+        for (let i = self._acciones.length - 1; i >= 0; i--) {
+            if (self._acciones[i].espera == 0) {
                 self.EjecutaAccion(self._acciones[i].pop());
             } else {
                 break;
             }
         }
 
-        for(let i = self._balas.length - 1; i >= 0; i--) {
-            if(self._balas[i].espera == 0) {
+        for (let i = self._balas.length - 1; i >= 0; i--) {
+            if (self._balas[i].espera == 0) {
                 self.MoverBala(self._balas[i]);
             } else {
                 break;
@@ -166,19 +166,44 @@ class Tablero {
      */
     MoverBala(bala) {
         let temp = this.tablero[bala.y][bala.x].in;
-        switch(bala.orientacion){
+        let aux = this._tablero;
+        aux[bala.y][bala.x].in.splice([temp.indexOf(bala)], 1);
+        switch (bala.orientacion) {
             case 'N':
-            this.tablero[bala.y][bala.x].in.splice([temp.indexOf(bala)],1);
-            break;
+                bala.y--;
+                break;
             case 'S':
-
-            break;
+                bala.y++;
+                break;
             case 'E':
-
-            break;
+                bala.x++;
+                break;
             case 'W':
-
-            break;
+                bala.x--;
+                break;
+        }
+        /*
+        if:
+            -(curvo & llega al objetivo & hay algo) | tenso & hay algo
+                pupa
+            -(curvo & llega al objetivo & no hay nada) | (tenso & (hay tierra | llega al objetivo))
+                return
+            --else
+                sigue nadando
+            
+        */
+        if (
+            (bala.tipo == "curvo" && bala.y == bala.objetivo_y) || 
+            (bala.tipo == "tenso" && (
+                aux[bala.y][bala.x].in[0] != null || 
+                bala.y == bala.objetivo_y ||
+                bala.x == bala.objetivo_x || 
+                aux[bala.y][bala.x].tipo != "tierra")
+            )
+        ) {
+            
+        } else {
+            aux[bala.y][bala.x].in.push(bala);
         }
     }
 
@@ -379,7 +404,7 @@ class Tablero {
             "velocidad_disparo": velocidad_disparo,
             "x": x,
             "y": y,
-            "direccion": this.tablero[y][x].in[0].orientacion,
+            "orientacion": this.tablero[y][x].in[0].orientacion,
             "objetivo_x": objetivo_x,
             "objetivo_y": objetivo_y,
             "espera": velocidad_disparo
