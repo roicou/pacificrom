@@ -168,7 +168,7 @@ class Tablero {
         let temp = this.tablero[bala.y][bala.x].in;
         switch(bala.orientacion){
             case 'N':
-                this.tablero[bala.y][bala.x].in[temp.indexOf(bala)];
+            this.tablero[bala.y][bala.x].in.splice([temp.indexOf(bala)],1);
             break;
             case 'S':
 
