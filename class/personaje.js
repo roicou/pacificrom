@@ -13,6 +13,7 @@ class Personaje {
         this.nombre = nombre;
         this.orientacion = this.OrientacionAleatoria();
         this._espera = 0;
+        this._espera_disparo = 0;
         switch (tipo) {
             case "barco1":
             default:
@@ -54,6 +55,12 @@ class Personaje {
         }
         return this._espera;
     }
+    get espera_disparo(){
+        if(this._espera_disparo > 0){
+            this._espera_disparo--;
+        }
+        return this._espera_disparo;
+    }
 
     /**
      * No sé muy bien cómo va esto XD
@@ -61,6 +68,9 @@ class Personaje {
      */
     get next() {
         return this._funcionIA(this._map);
+    }
+    Disparo(){
+        this._espera_disparo = this.cadencia;
     }
 }
 
