@@ -39,7 +39,7 @@ class Tablero {
     }
     /**
      * Genera de forma aleatoria un tipo de terreno a escoger entre "agua", "tierra" o 
-     * "iceberg". <br/> Hay un 95% de probabilidades de que salga "agua" y un 5% para los 
+     * "remolino". <br/> Hay un 95% de probabilidades de que salga "agua" y un 5% para los 
      * otros elementos.
      * @param {Number} tierra 0 = No hay agua. 1 = Hay agua arriba o izquierda. 2 = Hay agua arriba y izquierda
      * @returns {string}    
@@ -69,7 +69,7 @@ class Tablero {
                 } else if (n <= 0.985) {
                     tipo = "tierra";
                 } else {
-                    tipo = "iceberg";
+                    tipo = "remolino";
                 }
                 break;
         }
@@ -117,6 +117,7 @@ class Tablero {
                         "x": x,
                         "y": y,
                         "espera": self.tablero[y][x].in[0].espera,
+                        "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
                         "next": self.tablero[y][x].in[0].next
                     });
                 }
@@ -131,13 +132,13 @@ class Tablero {
         self._acciones.sort((a, b) => { return b.espera - a.espera });
         self._balas.sort((a, b) => { return b.espera - a.espera });
 
+        console.log(self._acciones);
+
         for (let i = self._acciones.length - 1; i >= 0; i--) {
-            if (self._acciones[i].espera == 0) {
-                self.EjecutaAccion(self._acciones[i].pop());
-            } else {
-                break;
-            }
+            self.EjecutaAccion(self._acciones[i]);
         }
+
+        console.log(self._balas);
 
         for (let i = self._balas.length - 1; i >= 0; i--) {
             if (self._balas[i].espera == 0) {
@@ -166,7 +167,7 @@ class Tablero {
      */
     MoverBala(bala) {
         let temp = this.tablero[bala.y][bala.x].in;
-        let aux = this._tablero;
+        let aux = this.tablero;
         aux[bala.y][bala.x].in.splice([temp.indexOf(bala)], 1);
         switch (bala.orientacion) {
             case 'N':
@@ -193,15 +194,18 @@ class Tablero {
             
         */
         if (
-            (bala.tipo == "curvo" && bala.y == bala.objetivo_y) || 
-            (bala.tipo == "tenso" && (
-                aux[bala.y][bala.x].in[0] != null || 
-                bala.y == bala.objetivo_y ||
-                bala.x == bala.objetivo_x || 
-                aux[bala.y][bala.x].tipo != "tierra")
-            )
+            (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] != null) ||
+            (bala.tipo == "tenso" && aux[bala.y][bala.x].in[0] != null)
         ) {
-            
+            aux[bala.y][bala.x].in[0].vida -= bala.pupa;
+            if (aux[bala.y][bala.x].in[0].vida <= 0) {
+                aux[bala.y][bala.x].in[0] = null;
+            }
+        } else if (
+            (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
+            ((bala.tipo == "tenso" && aux[bala.y][bala.x].tipo == "tierra") || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))
+        ) {
+            return;
         } else {
             aux[bala.y][bala.x].in.push(bala);
         }
@@ -252,8 +256,17 @@ class Tablero {
      */
     EjecutaAccion(accion) {
         if (accion.next.accion == "moverse") {
-            this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+            if (accion.espera == 0) {
+                this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+            }
             //console.log('eeeeeeee');
+        }
+        if (accion.next.accion = "disparar") {
+            if (accion.espera_disparo == 0) {
+                if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y, accion.tipo, accion.velocidad_disparo, accion.pupa)) {
+                    this.tablero[accion.y][accion.x].in[0].Disparo();
+                }
+            }
         }
     }
 
@@ -313,14 +326,17 @@ class Tablero {
                 if (x != null) {
                     switch (x.tipo) {
                         case "tierra":
-                            imprime += "@@@@@@";
-                            break;
-                        case "iceberg":
                             imprime += "######";
+                            break;
+                        case "remolino":
+                            imprime += "@@@@@@";
                             break;
                     }
                     if (x.in[0] != null) {
                         imprime += "[" + x.in[0].nombre + "]";
+                    }
+                    if(x.in.length > 0) {
+                        imprime += "[ (=) ]";
                     }
 
                     imprime += "\t|"
@@ -336,15 +352,15 @@ class Tablero {
 
     /**
      * Método que introduce una bala en el tablero comprobando que el objetivo es viable.
-     * @param {Array} tablero 
      * @param {Number} x 
      * @param {Number} y 
      * @param {Number} objetivo_x 
      * @param {Number} objetivo_y 
      * @param {String} tipo Tipo de disparo
      * @param {Number} velocidad_disparo
+     * @param {Number} pupa
      */
-    Disparar(x, y, objetivo_x, objetivo_y, tipo, velocidad_disparo) {
+    Disparar(x, y, objetivo_x, objetivo_y, tipo, velocidad_disparo, pupa) {
         switch (this.tablero[y][x].in[0].orientacion) {
             case "N":
                 if (y > 0) {
@@ -407,7 +423,8 @@ class Tablero {
             "orientacion": this.tablero[y][x].in[0].orientacion,
             "objetivo_x": objetivo_x,
             "objetivo_y": objetivo_y,
-            "espera": velocidad_disparo
+            "espera": velocidad_disparo,
+            "pupa": pupa
         });
         return true;
     }
