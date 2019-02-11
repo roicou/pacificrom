@@ -26,7 +26,12 @@ partida.imprime;
  * @returns {Object} 
  */
 function RandomAction() {
-    let accion = "moverse";
+    let random = Math.random();
+    if (random < 0.15) {
+        let accion = "disparar";
+    } else {
+        let accion = "moverse";
+    }
     return {
         "accion": accion,
         "direccion": OrientacionAleatoria()
