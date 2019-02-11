@@ -12,7 +12,7 @@
 let Tablero = require('./class/tablero.js');
 let Personaje = require('./class/personaje.js');
 
-let partida = new Tablero.Tablero(20, 19);
+let partida = new Tablero.Tablero(15, 15);
 partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RandomAction));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco1', RandomAction));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', 'barco1', RandomAction));
@@ -27,15 +27,18 @@ partida.imprime;
  */
 function RandomAction() {
     let random = Math.random();
-    if (random < 0.15) {
-        let accion = "disparar";
+    let accion = {};
+    if (random < 0.05) {
+        accion = {
+            accion: "disparar"
+        };
     } else {
-        let accion = "moverse";
+        accion = {
+            accion: "moverse",
+            direccion: OrientacionAleatoria()
+        }
     }
-    return {
-        "accion": accion,
-        "direccion": OrientacionAleatoria()
-    };
+    return accion;
 }
 
 /**
@@ -60,4 +63,4 @@ function OrientacionAleatoria() {
 setInterval pierde la referencia al objeto. Solo llama a la función, dejando a un lado el objeto en el que 
 estaba la función
 */
-setInterval(partida.Tick, 2000, partida);
+setInterval(partida.Tick, 500, partida);

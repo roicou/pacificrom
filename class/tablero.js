@@ -119,6 +119,7 @@ class Tablero {
                         "espera": self.tablero[y][x].in[0].espera,
                         "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
                         "next": self.tablero[y][x].in[0].next
+
                     });
                 }
                 if (self.tablero[y][x].in.length > 1) {
@@ -132,11 +133,7 @@ class Tablero {
         self._acciones.sort((a, b) => { return b.espera - a.espera });
         self._balas.sort((a, b) => { return b.espera - a.espera });
 
-        console.log(self._acciones);
 
-        for (let i = self._acciones.length - 1; i >= 0; i--) {
-            self.EjecutaAccion(self._acciones[i]);
-        }
 
         console.log(self._balas);
 
@@ -148,6 +145,11 @@ class Tablero {
             }
         }
 
+        console.log(self._acciones);
+
+        for (let i = self._acciones.length - 1; i >= 0; i--) {
+            self.EjecutaAccion(self._acciones[i]);
+        }
         self.imprime;
     }
 
@@ -193,6 +195,7 @@ class Tablero {
                 sigue nadando
             
         */
+
         if (
             (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] != null) ||
             (bala.tipo == "tenso" && aux[bala.y][bala.x].in[0] != null)
@@ -201,13 +204,17 @@ class Tablero {
             if (aux[bala.y][bala.x].in[0].vida <= 0) {
                 aux[bala.y][bala.x].in[0] = null;
             }
+            console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
         } else if (
             (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
             ((bala.tipo == "tenso" && aux[bala.y][bala.x].tipo == "tierra") || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))
         ) {
+            console.log("RETUUUUUUUUUUUUUUUUUUUURN");
             return;
         } else {
+            console.log("SIGUE NADANDO!!!!!!");
             aux[bala.y][bala.x].in.push(bala);
+            aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].espera = aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].velocidad_disparo;
         }
     }
 
@@ -257,13 +264,14 @@ class Tablero {
     EjecutaAccion(accion) {
         if (accion.next.accion == "moverse") {
             if (accion.espera == 0) {
+                this.tablero[accion.y][accion.x].in[0]._espera = this.tablero[accion.y][accion.x].in[0].velocidad; 
                 this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
             }
             //console.log('eeeeeeee');
-        }
-        if (accion.next.accion = "disparar") {
+        } else if (accion.next.accion = "disparar") {
+            console.log(">>>>>>>>>>>>>>", accion);
             if (accion.espera_disparo == 0) {
-                if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y, accion.tipo, accion.velocidad_disparo, accion.pupa)) {
+                if (this.Disparar(accion.x, accion.y, accion.next.objetivo_x, accion.next.objetivo_y, accion.next.tipo, accion.velocidad_disparo, accion.pupa)) {
                     this.tablero[accion.y][accion.x].in[0].Disparo();
                 }
             }
@@ -320,9 +328,17 @@ class Tablero {
      * tablero entero o el que puede ver un personaje.
      */
     get imprime() {
+        //let contador = 0;
+        //let contador2 = 0;
+        //let contador3 = 0;
         for (let y of this.tablero) {
+            //let imprime = contador + " |";
             let imprime = "|";
+            //contador++;
             for (let x of y) {
+                //if (contador3 == 0) {
+                    //imprime += contador2; contador2++;
+                //}
                 if (x != null) {
                     switch (x.tipo) {
                         case "tierra":
@@ -335,8 +351,8 @@ class Tablero {
                     if (x.in[0] != null) {
                         imprime += "[" + x.in[0].nombre + "]";
                     }
-                    if(x.in.length > 0) {
-                        imprime += "[ (=) ]";
+                    if (x.in.length > 1) {
+                        imprime += "==";
                     }
 
                     imprime += "\t|"
@@ -344,6 +360,7 @@ class Tablero {
                     imprime += "null\t|";
                 }
             }
+            //contador3++;
             console.log(imprime);
         }
         console.log("----------------------------------------");
@@ -360,7 +377,9 @@ class Tablero {
      * @param {Number} velocidad_disparo
      * @param {Number} pupa
      */
-    Disparar(x, y, objetivo_x, objetivo_y, tipo, velocidad_disparo, pupa) {
+    Disparar(x, y, objetivo_x, objetivo_y) {
+        let aux_x = x;
+        let aux_y = y;
         switch (this.tablero[y][x].in[0].orientacion) {
             case "N":
                 if (y > 0) {
@@ -389,7 +408,7 @@ class Tablero {
                 }
                 break;
             case "E":
-                if (x < tablero[y].length - 1) {
+                if (x < this.tablero[y].length - 1) {
                     if (this.tablero[y][x].in[0].rango < (objetivo_x - x)) {
                         objetivo_x = x + this.tablero[y][x].in[0].rango;
                         if (objetivo_x >= tablero[y].length) {
@@ -416,15 +435,15 @@ class Tablero {
                 break;
         }
         this.tablero[y][x].in.push({
-            "tipo": tipo,
-            "velocidad_disparo": velocidad_disparo,
+            "tipo": this.tablero[aux_y][aux_x].in[0].disparo,
+            "velocidad_disparo": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
             "x": x,
             "y": y,
-            "orientacion": this.tablero[y][x].in[0].orientacion,
+            "orientacion": this.tablero[aux_y][aux_x].in[0].orientacion,
             "objetivo_x": objetivo_x,
             "objetivo_y": objetivo_y,
-            "espera": velocidad_disparo,
-            "pupa": pupa
+            "espera": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
+            "pupa": this.tablero[aux_y][aux_x].in[0].pupa
         });
         return true;
     }
