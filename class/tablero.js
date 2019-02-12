@@ -133,8 +133,6 @@ class Tablero {
         self._acciones.sort((a, b) => { return b.espera - a.espera });
         self._balas.sort((a, b) => { return b.espera - a.espera });
 
-
-
         console.log(self._balas);
 
         for (let i = self._balas.length - 1; i >= 0; i--) {
@@ -151,6 +149,8 @@ class Tablero {
             self.EjecutaAccion(self._acciones[i]);
         }
         self.imprime;
+
+        self.Cracken();
     }
 
 
@@ -264,7 +264,7 @@ class Tablero {
     EjecutaAccion(accion) {
         if (accion.next.accion == "moverse") {
             if (accion.espera == 0) {
-                this.tablero[accion.y][accion.x].in[0]._espera = this.tablero[accion.y][accion.x].in[0].velocidad; 
+                this.tablero[accion.y][accion.x].in[0]._espera = this.tablero[accion.y][accion.x].in[0].velocidad;
                 this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
             }
             //console.log('eeeeeeee');
@@ -337,7 +337,7 @@ class Tablero {
             //contador++;
             for (let x of y) {
                 //if (contador3 == 0) {
-                    //imprime += contador2; contador2++;
+                //imprime += contador2; contador2++;
                 //}
                 if (x != null) {
                     switch (x.tipo) {
@@ -446,6 +446,16 @@ class Tablero {
             "pupa": this.tablero[aux_y][aux_x].in[0].pupa
         });
         return true;
+    }
+
+    Cracken() {
+        let random = Math.random();
+        let y = Math.floor(Math.random() * (this.tablero.length - 1));
+        let x = Math.floor(Math.random() * (this.tablero[0].length - 1));
+
+        if (random < 0.1) {
+            this.tablero[y][x].in[0] = { "nombre": "El Cracken" };
+        }
     }
 }
 
