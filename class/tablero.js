@@ -150,7 +150,7 @@ class Tablero {
         }
         self.imprime;
 
-        self.Cracken();
+        self.Kraken();
     }
 
 
@@ -448,13 +448,13 @@ class Tablero {
         return true;
     }
 
-    Cracken() {
+    kraken() {
         let random = Math.random();
         let y = Math.floor(Math.random() * (this.tablero.length - 1));
         let x = Math.floor(Math.random() * (this.tablero[0].length - 1));
 
         if (random < 0.1) {
-            this.tablero[y][x].in[0] = { "nombre": "El Cracken" };
+            this.tablero[y][x].in[0] = { "nombre": "El kraken" };
         }
     }
 }
