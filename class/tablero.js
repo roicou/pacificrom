@@ -448,7 +448,7 @@ class Tablero {
         return true;
     }
 
-    kraken() {
+    Kraken() {
         let random = Math.random();
         let y = Math.floor(Math.random() * (this.tablero.length - 1));
         let x = Math.floor(Math.random() * (this.tablero[0].length - 1));

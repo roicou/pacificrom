@@ -17,14 +17,14 @@ class Personaje {
         switch (tipo) {
             case "barco1":
             default:
-                this.velocidad = 100;
+                this.velocidad = 20;
                 this.vida = 100;
                 this.vision = 5;
                 this.disparo = "curvo";
                 this.rango = 3;
                 this.pupa = 50;
-                this.velocidad_disparo = 10;
-                this.cadencia = 20;
+                this.velocidad_disparo = 3;
+                this.cadencia = 10;
         }
     }
     /**
