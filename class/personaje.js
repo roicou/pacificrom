@@ -16,15 +16,35 @@ class Personaje {
         this._espera_disparo = 0;
         switch (tipo) {
             case "barco1":
+                this.velocidad = 10;
+                this.vida = 50;
+                this.vision = 5;
+                this.disparo = "tenso";
+                this.rango = 5;
+                this.pupa = 200;
+                this.velocidad_disparo = 2;
+                this.cadencia = 5;
+                break;
+            case "barco2":
+                this.velocidad = 30;
+                this.vida = 200;
+                this.vision = 6;
+                this.disparo = "curvo";
+                this.rango = 7;
+                this.pupa = 200;
+                this.velocidad_disparo = 5;
+                this.cadencia = 20;
+                break;
             default:
                 this.velocidad = 20;
                 this.vida = 100;
                 this.vision = 5;
                 this.disparo = "curvo";
                 this.rango = 3;
-                this.pupa = 50;
+                this.pupa = 200;
                 this.velocidad_disparo = 3;
                 this.cadencia = 10;
+                break;
         }
     }
     /**
@@ -43,20 +63,20 @@ class Personaje {
             return "W";
         }
     }
-    update(map){
+    update(map) {
         this._map = map;
     }
     set espera(n) {
         this._espera = n;
     }
     get espera() {
-        if(this._espera > 0) {
+        if (this._espera > 0) {
             this._espera--;
         }
         return this._espera;
     }
-    get espera_disparo(){
-        if(this._espera_disparo > 0){
+    get espera_disparo() {
+        if (this._espera_disparo > 0) {
             this._espera_disparo--;
         }
         return this._espera_disparo;
@@ -69,7 +89,7 @@ class Personaje {
     get next() {
         return this._funcionIA(this._map);
     }
-    Disparo(){
+    Disparo() {
         this._espera_disparo = this.cadencia;
     }
 }

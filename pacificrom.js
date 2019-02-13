@@ -14,8 +14,8 @@ let Personaje = require('./class/personaje.js');
 
 let partida = new Tablero.Tablero(15, 15);
 partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RandomAction));
-partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco1', RandomAction));
-partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', 'barco1', RandomAction));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco2', RandomAction));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', "", RandomAction));
 
 //let pj = new Personaje.Personaje('Roi', 'barco1', RandomAction);
 
@@ -30,7 +30,7 @@ function RandomAction() {
     let accion = {};
     if (random < 0.05) {
         accion = {
-            accion: "disparar"
+            accion: "disparar",
         };
     } else {
         accion = {

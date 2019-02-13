@@ -111,16 +111,21 @@ class Tablero {
         //console.log(self.tablero);
         for (let y = 0; y < self.tablero.length; y++) {
             for (let x = 0; x < self.tablero[y].length; x++) {
+                //compruebo que sea distinto de null y no sea el kraken
                 if (self.tablero[y][x].in[0] != null) {
-                    self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
-                    self._acciones.push({
-                        "x": x,
-                        "y": y,
-                        "espera": self.tablero[y][x].in[0].espera,
-                        "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
-                        "next": self.tablero[y][x].in[0].next
+                    if (self.tablero[y][x].in[0].nombre == "El kraken") {
+                        self.tablero[y][x].in[0] = null;
+                    } else {
+                        self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
+                        self._acciones.push({
+                            "x": x,
+                            "y": y,
+                            "espera": self.tablero[y][x].in[0].espera,
+                            "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
+                            "next": self.tablero[y][x].in[0].next
 
-                    });
+                        });
+                    }
                 }
                 if (self.tablero[y][x].in.length > 1) {
                     for (let i = 1; i < self.tablero[y][x].in.length; i++) {
@@ -148,9 +153,8 @@ class Tablero {
         for (let i = self._acciones.length - 1; i >= 0; i--) {
             self.EjecutaAccion(self._acciones[i]);
         }
-        self.imprime;
-
         self.Kraken();
+        self.imprime;
     }
 
 
@@ -170,7 +174,7 @@ class Tablero {
     MoverBala(bala) {
         let temp = this.tablero[bala.y][bala.x].in;
         let aux = this.tablero;
-        aux[bala.y][bala.x].in.splice([temp.indexOf(bala)], 1);
+        this.tablero[bala.y][bala.x].in.splice([temp.indexOf(bala)], 1);
         switch (bala.orientacion) {
             case 'N':
                 bala.y--;
@@ -195,26 +199,30 @@ class Tablero {
                 sigue nadando
             
         */
-
-        if (
-            (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] != null) ||
-            (bala.tipo == "tenso" && aux[bala.y][bala.x].in[0] != null)
-        ) {
-            aux[bala.y][bala.x].in[0].vida -= bala.pupa;
-            if (aux[bala.y][bala.x].in[0].vida <= 0) {
-                aux[bala.y][bala.x].in[0] = null;
-            }
-            console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
-        } else if (
-            (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
-            ((bala.tipo == "tenso" && aux[bala.y][bala.x].tipo == "tierra") || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))
-        ) {
-            console.log("RETUUUUUUUUUUUUUUUUUUUURN");
+        //solucion temporal a balas llendose del mapa
+        if (aux[bala.y] == undefined || aux[bala.y][bala.x] == undefined) {
             return;
         } else {
-            console.log("SIGUE NADANDO!!!!!!");
-            aux[bala.y][bala.x].in.push(bala);
-            aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].espera = aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].velocidad_disparo;
+            if (
+                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] != null) ||
+                (bala.tipo == "tenso" && aux[bala.y][bala.x].in[0] != null)
+            ) {
+                aux[bala.y][bala.x].in[0].vida -= bala.pupa;
+                if (aux[bala.y][bala.x].in[0].vida <= 0) {
+                    aux[bala.y][bala.x].in[0] = null;
+                }
+                console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
+            } else if (
+                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
+                ((bala.tipo == "tenso" && aux[bala.y][bala.x].tipo == "tierra") || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))
+            ) {
+                console.log("RETUUUUUUUUUUUUUUUUUUUURN");
+                return;
+            } else {
+                console.log("SIGUE NADANDO!!!!!!");
+                aux[bala.y][bala.x].in.push(bala);
+                aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].espera = aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].velocidad_disparo;
+            }
         }
     }
 
@@ -352,7 +360,13 @@ class Tablero {
                         imprime += "[" + x.in[0].nombre + "]";
                     }
                     if (x.in.length > 1) {
-                        imprime += "==";
+                        for (let i = 1; i < x.in.length; i++) {
+                            if (x.in[i].tipo == "curvo") {
+                                imprime += "^^^";
+                            } else {
+                                imprime += "---";
+                            }
+                        }
                     }
 
                     imprime += "\t|"
