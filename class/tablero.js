@@ -117,9 +117,28 @@ class Tablero {
                         self.tablero[y][x].in[0] = null;
                     } else {
                         self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
+                        let objetivo_y = y;
+                        let objetivo_x = x;
+                        switch (self.tablero[y][x].in[0].orientacion) {
+                            case "N":
+                                objetivo_y = Math.floor(Math.random() * (y - 0) + 0);
+                                break;
+                            case "S":
+                                objetivo_y = Math.floor(Math.random() * (self.tablero[y].length - y) + y);
+                                break;
+                            case "E":
+                                objetivo_x = Math.floor(Math.random() * (self.tablero[y][x].length - x) + x);
+                                break;
+                            case "W":
+                                objetivo_x = Math.floor(Math.random(0) * (x - 0) + 0);
+                                break;
+                        }
+
                         self._acciones.push({
                             "x": x,
                             "y": y,
+                            "objetivo_x": objetivo_x,
+                            "objetivo_y": objetivo_y,
                             "espera": self.tablero[y][x].in[0].espera,
                             "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
                             "next": self.tablero[y][x].in[0].next
@@ -138,7 +157,7 @@ class Tablero {
         self._acciones.sort((a, b) => { return b.espera - a.espera });
         self._balas.sort((a, b) => { return b.espera - a.espera });
 
-        console.log(self._balas);
+        //console.log(self._balas);
 
         for (let i = self._balas.length - 1; i >= 0; i--) {
             if (self._balas[i].espera == 0) {
@@ -148,7 +167,7 @@ class Tablero {
             }
         }
 
-        console.log(self._acciones);
+        //console.log(self._acciones);
 
         for (let i = self._acciones.length - 1; i >= 0; i--) {
             self.EjecutaAccion(self._acciones[i]);
@@ -156,16 +175,6 @@ class Tablero {
         self.Kraken();
         self.imprime;
     }
-
-
-    //*****************************************************************************************************************************
-    //*****************************************************************************************************************************
-    //*****************************************************************************************************************************
-    //************************************************  VAMOS POR AQUÍ  ***********************************************************
-    //*****************************************************************************************************************************
-    //*****************************************************************************************************************************
-    //*****************************************************************************************************************************
-
 
     /**
      * Mueve la bala y, en caso de que toque, catapum chin pum
@@ -214,7 +223,7 @@ class Tablero {
                 console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
             } else if (
                 (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
-                ((bala.tipo == "tenso" && aux[bala.y][bala.x].tipo == "tierra") || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))
+                ((bala.tipo == "tenso" && (aux[bala.y][bala.x].tipo == "tierra" || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))))
             ) {
                 console.log("RETUUUUUUUUUUUUUUUUUUUURN");
                 return;
@@ -279,7 +288,7 @@ class Tablero {
         } else if (accion.next.accion = "disparar") {
             console.log(">>>>>>>>>>>>>>", accion);
             if (accion.espera_disparo == 0) {
-                if (this.Disparar(accion.x, accion.y, accion.next.objetivo_x, accion.next.objetivo_y, accion.next.tipo, accion.velocidad_disparo, accion.pupa)) {
+                if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y)) {
                     this.tablero[accion.y][accion.x].in[0].Disparo();
                 }
             }
@@ -299,16 +308,20 @@ class Tablero {
     MoverPersonaje(posx, posy, direccion) {
         switch (direccion) {
             case 'N':
+                this.tablero[posy][posx].in[0].orientacion = "N"
                 this.MoviendoPersonaje(posx, posx, posy, (posy - 1));
                 break;
             case 'E':
+                this.tablero[posy][posx].in[0].orientacion = "E"
                 this.MoviendoPersonaje(posx, (posx + 1), posy, posy);
                 break;
             case 'S':
+                this.tablero[posy][posx].in[0].orientacion = "S"
                 this.MoviendoPersonaje(posx, posx, posy, (posy + 1));
                 break;
             case 'W':
             case 'O':
+                this.tablero[posy][posx].in[0].orientacion = "W"
                 this.MoviendoPersonaje(posx, (posx - 1), posy, posy);
                 break;
         }
@@ -412,8 +425,8 @@ class Tablero {
                 if (y < this.tablero.length - 1) {
                     if (this.tablero[y][x].in[0].rango < (objetivo_y - y)) {
                         objetivo_y = y + this.tablero[y][x].in[0].rango;
-                        if (objetivo_y >= tablero.length) {
-                            objetivo_y = tablero.length - 1;
+                        if (objetivo_y >= this.tablero.length) {
+                            objetivo_y = this.tablero.length - 1;
                         }
                     }
                     y++;
@@ -425,8 +438,8 @@ class Tablero {
                 if (x < this.tablero[y].length - 1) {
                     if (this.tablero[y][x].in[0].rango < (objetivo_x - x)) {
                         objetivo_x = x + this.tablero[y][x].in[0].rango;
-                        if (objetivo_x >= tablero[y].length) {
-                            objetivo_x = tablero[y].length - 1;
+                        if (objetivo_x >= this.tablero[y].length) {
+                            objetivo_x = this.tablero[y].length - 1;
                         }
                     }
                     x++;

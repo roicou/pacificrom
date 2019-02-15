@@ -20,7 +20,7 @@ class Personaje {
                 this.vida = 50;
                 this.vision = 5;
                 this.disparo = "tenso";
-                this.rango = 5;
+                this.rango = 3;
                 this.pupa = 200;
                 this.velocidad_disparo = 2;
                 this.cadencia = 5;
@@ -30,7 +30,7 @@ class Personaje {
                 this.vida = 200;
                 this.vision = 6;
                 this.disparo = "curvo";
-                this.rango = 7;
+                this.rango = 3;
                 this.pupa = 200;
                 this.velocidad_disparo = 5;
                 this.cadencia = 20;
