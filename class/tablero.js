@@ -113,7 +113,7 @@ class Tablero {
             for (let x = 0; x < self.tablero[y].length; x++) {
                 //compruebo que sea distinto de null y no sea el kraken
                 if (self.tablero[y][x].in[0] != null) {
-                    if (self.tablero[y][x].in[0].nombre == "El kraken") {
+                    if (self.tablero[y][x].in[0].nombre == "Kraken") {
                         self.tablero[y][x].in[0] = null;
                     } else {
                         self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
@@ -480,8 +480,8 @@ class Tablero {
         let y = Math.floor(Math.random() * (this.tablero.length - 1));
         let x = Math.floor(Math.random() * (this.tablero[0].length - 1));
 
-        if (random < 0.1) {
-            this.tablero[y][x].in[0] = { "nombre": "El kraken" };
+        if (random < 0.02) {
+            this.tablero[y][x].in[0] = { "nombre": "Kraken" };
         }
     }
 }
