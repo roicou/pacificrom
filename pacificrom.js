@@ -12,6 +12,7 @@
 let Tablero = require('./class/tablero.js');
 let Personaje = require('./class/personaje.js');
 
+
 let partida = new Tablero.Tablero(15, 15);
 partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RandomAction));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco2', RandomAction));
