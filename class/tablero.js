@@ -462,17 +462,8 @@ class Tablero {
                 }
                 break;
         }
-        this.tablero[y][x].in.push(new this.Bala.Bala(
-            this.tablero[aux_y][aux_x].in[0].disparo,
-            this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
-            x,
-            y,
-            this.tablero[aux_y][aux_x].in[0].orientacion,
-            objetivo_x,
-            objetivo_y,
-            this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
-            this.tablero[aux_y][aux_x].in[0].pupa
-        ));/*            "tipo": this.tablero[aux_y][aux_x].in[0].disparo,
+        this.tablero[y][x].in.push({
+            "tipo": this.tablero[aux_y][aux_x].in[0].disparo,
             "velocidad_disparo": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
             "x": x,
             "y": y,
@@ -481,7 +472,7 @@ class Tablero {
             "objetivo_y": objetivo_y,
             "espera": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
             "pupa": this.tablero[aux_y][aux_x].in[0].pupa
-        });*/
+        });
         return true;
     }
 
