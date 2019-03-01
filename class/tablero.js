@@ -9,7 +9,6 @@ class Tablero {
      * @returns {Array}    
      */
     constructor(filas, columnas) {
-        this.Bala = require('../class/bala.js');
         this.tablero = [];
         for (let y = 0; y < filas; y++) {
             this.tablero.push([]);
@@ -406,8 +405,10 @@ class Tablero {
      * @param {Number} pupa
      */
     Disparar(x, y, objetivo_x, objetivo_y) {
+        //falla disparo tenso
         let aux_x = x;
         let aux_y = y;
+        let orientacion = this.tablero[y][x].in[0].orientacion;
         switch (this.tablero[y][x].in[0].orientacion) {
             case "N":
                 if (y > 0) {
