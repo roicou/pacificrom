@@ -113,7 +113,7 @@ class Tablero {
             for (let x = 0; x < self.tablero[y].length; x++) {
                 //compruebo que sea distinto de null y no sea el kraken
                 if (self.tablero[y][x].in[0] != null) {
-                    if (self.tablero[y][x].in[0].nombre == "Kraken") {
+                    if (self.tablero[y][x].in[0].tipo == "kraken") {
                         self.tablero[y][x].in[0] = null;
                     } else {
                         self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
@@ -124,10 +124,10 @@ class Tablero {
                                 objetivo_y = Math.floor(Math.random() * (y - 0) + 0);
                                 break;
                             case "S":
-                                objetivo_y = Math.floor(Math.random() * (self.tablero[y].length - y) + y);
+                                objetivo_y = Math.floor(Math.random() * ((self.tablero.length - 1) - y) + y);
                                 break;
                             case "E":
-                                objetivo_x = Math.floor(Math.random() * (self.tablero[y][x].length - x) + x);
+                                objetivo_x = Math.floor(Math.random() * (self.tablero[y].length - x) + x);
                                 break;
                             case "W":
                                 objetivo_x = Math.floor(Math.random(0) * (x - 0) + 0);
@@ -184,19 +184,21 @@ class Tablero {
         let temp = this.tablero[bala.y][bala.x].in;
         let aux = this.tablero;
         this.tablero[bala.y][bala.x].in.splice([temp.indexOf(bala)], 1);
-        switch (bala.orientacion) {
-            case 'N':
-                bala.y--;
-                break;
-            case 'S':
-                bala.y++;
-                break;
-            case 'E':
-                bala.x++;
-                break;
-            case 'W':
-                bala.x--;
-                break;
+        if (bala.y != bala.objetivo_y || bala.x != bala.objetivo_x) {
+            switch (bala.orientacion) {
+                case 'N':
+                    bala.y--;
+                    break;
+                case 'S':
+                    bala.y++;
+                    break;
+                case 'E':
+                    bala.x++;
+                    break;
+                case 'W':
+                    bala.x--;
+                    break;
+            }
         }
         /*
         if:
@@ -209,29 +211,33 @@ class Tablero {
             
         */
         //solucion temporal a balas llendose del mapa
-        if (aux[bala.y] == undefined || aux[bala.y][bala.x] == undefined) {
+        if (this.tablero[bala.y] == undefined || this.tablero[bala.y][bala.x] == undefined) {
             return;
         } else {
             if (
-                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] != null) ||
-                (bala.tipo == "tenso" && aux[bala.y][bala.x].in[0] != null)
+                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && this.tablero[bala.y][bala.x].in[0] != null) ||
+                (bala.tipo == "tenso" && this.tablero[bala.y][bala.x].in[0] != null)
             ) {
-                aux[bala.y][bala.x].in[0].vida -= bala.pupa;
-                if (aux[bala.y][bala.x].in[0].vida <= 0) {
-                    aux[bala.y][bala.x].in[0] = null;
-                }
-                console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
+                this.Pupa(bala);
+                //console.log("PUPAAAAAAAAAAAAAAAAAAAAA");
             } else if (
-                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && aux[bala.y][bala.x].in[0] == null) ||
-                ((bala.tipo == "tenso" && (aux[bala.y][bala.x].tipo == "tierra" || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))))
+                (bala.tipo == "curvo" && bala.x == bala.objetivo_x && bala.y == bala.objetivo_y && this.tablero[bala.y][bala.x].in[0] == null) ||
+                ((bala.tipo == "tenso" && (this.tablero[bala.y][bala.x].tipo == "tierra" || (bala.x == bala.objetivo_x && bala.y == bala.objetivo_y))))
             ) {
-                console.log("RETUUUUUUUUUUUUUUUUUUUURN");
+                //console.log("RETUUUUUUUUUUUUUUUUUUUURN");
                 return;
             } else {
-                console.log("SIGUE NADANDO!!!!!!");
-                aux[bala.y][bala.x].in.push(bala);
-                aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].espera = aux[bala.y][bala.x].in[aux[bala.y][bala.x].in.indexOf(bala)].velocidad_disparo;
+                //console.log("SIGUE NADANDO!!!!!!");
+                this.tablero[bala.y][bala.x].in.push(bala);
+                this.tablero[bala.y][bala.x].in[this.tablero[bala.y][bala.x].in.indexOf(bala)].espera = this.tablero[bala.y][bala.x].in[this.tablero[bala.y][bala.x].in.indexOf(bala)].velocidad_disparo;
             }
+        }
+    }
+
+    Pupa(bala) {
+        this.tablero[bala.y][bala.x].in[0].vida -= bala.pupa;
+        if (this.tablero[bala.y][bala.x].in[0].vida <= 0) {
+            this.tablero[bala.y][bala.x].in[0] = null;
         }
     }
 
@@ -286,7 +292,7 @@ class Tablero {
             }
             //console.log('eeeeeeee');
         } else if (accion.next.accion = "disparar") {
-            console.log(">>>>>>>>>>>>>>", accion);
+            //console.log(">>>>>>>>>>>>>>", accion);
             if (accion.espera_disparo == 0) {
                 if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y)) {
                     this.tablero[accion.y][accion.x].in[0].Disparo();
@@ -405,11 +411,14 @@ class Tablero {
      * @param {Number} pupa
      */
     Disparar(x, y, objetivo_x, objetivo_y) {
-        //falla disparo tenso
+        if (this.tablero[y][x].in[0] == null) {
+            // Si no hay barco en el punto de disparo cortamos
+            return false;
+        }
         let aux_x = x;
         let aux_y = y;
         let orientacion = this.tablero[y][x].in[0].orientacion;
-        switch (this.tablero[y][x].in[0].orientacion) {
+        switch (orientacion) {
             case "N":
                 if (y > 0) {
                     if (this.tablero[y][x].in[0].rango < (y - objetivo_y)) {
@@ -463,18 +472,31 @@ class Tablero {
                 }
                 break;
         }
-        this.tablero[y][x].in.push({
+
+        if (this.tablero[y][x].tipo == "tierra" && this.tablero[aux_y][aux_x].in[0].disparo == "tenso") {
+            //Si intenta disparar un tenso contra la tierra
+            return false;
+        }
+        let bala = {
             "tipo": this.tablero[aux_y][aux_x].in[0].disparo,
             "velocidad_disparo": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
             "x": x,
             "y": y,
-            "orientacion": this.tablero[aux_y][aux_x].in[0].orientacion,
+            "orientacion": orientacion,
             "objetivo_x": objetivo_x,
             "objetivo_y": objetivo_y,
             "espera": this.tablero[aux_y][aux_x].in[0].velocidad_disparo,
             "pupa": this.tablero[aux_y][aux_x].in[0].pupa
-        });
+        };
+
+        if (this.tablero[y][x].in[0] != null && bala.tipo == "tenso") {
+            //Si dispara un tenso y justo hay un barco pegado
+            this.Pupa(bala);
+            return true;
+        }
+        this.tablero[y][x].in.push(bala);
         return true;
+
     }
 
     Kraken() {
@@ -483,7 +505,9 @@ class Tablero {
         let x = Math.floor(Math.random() * (this.tablero[0].length - 1));
 
         if (random < 0.05) {
-            this.tablero[y][x].in[0] = { "nombre": "Kraken" };
+            if (this.tablero[y][x].tipo == "agua") {
+                this.tablero[y][x].in[0] = { "nombre": "Krkn", "tipo": "kraken" };
+            }
         }
     }
 }

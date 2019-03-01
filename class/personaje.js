@@ -20,27 +20,37 @@ class Personaje {
                 this.vida = 50;
                 this.vision = 5;
                 this.disparo = "tenso";
-                this.rango = 3;
-                this.pupa = 200;
+                this.rango = 4;
+                this.pupa = 100;
                 this.velocidad_disparo = 2;
                 this.cadencia = 5;
                 break;
             case "barco2":
                 this.velocidad = 30;
-                this.vida = 200;
+                this.vida = 100;
                 this.vision = 6;
                 this.disparo = "curvo";
-                this.rango = 3;
+                this.rango = 6;
                 this.pupa = 200;
                 this.velocidad_disparo = 5;
                 this.cadencia = 20;
+                break;
+            case "diego":
+                this.velocidad = 100;
+                this.vida = 10;
+                this.vision = 10;
+                this.disparo = "curvo";
+                this.rango = 1;
+                this.pupa = 1;
+                this.velocidad_disparo = 50;
+                this.cadencia = 100;
                 break;
             default:
                 this.velocidad = 20;
                 this.vida = 100;
                 this.vision = 5;
                 this.disparo = "curvo";
-                this.rango = 3;
+                this.rango = 5;
                 this.pupa = 200;
                 this.velocidad_disparo = 3;
                 this.cadencia = 10;

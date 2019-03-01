@@ -13,10 +13,11 @@ let Tablero = require('./class/tablero.js');
 let Personaje = require('./class/personaje.js');
 
 
-let partida = new Tablero.Tablero(15, 15);
+let partida = new Tablero.Tablero(8, 6);
 partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RandomAction));
-partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco2', RandomAction));
-partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', "", RandomAction));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco1', RandomAction));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', "barco1", RandomAction));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Dieg', "diego", RandomAction));
 
 //let pj = new Personaje.Personaje('Roi', 'barco1', RandomAction);
 
