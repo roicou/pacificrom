@@ -117,6 +117,7 @@ class Tablero {
                         self.tablero[y][x].in[0] = null;
                     } else {
                         self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
+                        /*
                         let objetivo_y = y;
                         let objetivo_x = x;
                         switch (self.tablero[y][x].in[0].orientacion) {
@@ -133,12 +134,14 @@ class Tablero {
                                 objetivo_x = Math.floor(Math.random(0) * (x - 0) + 0);
                                 break;
                         }
-
+                        */
                         self._acciones.push({
                             "x": x,
                             "y": y,
+                            /*
                             "objetivo_x": objetivo_x,
                             "objetivo_y": objetivo_y,
+                            */
                             "espera": self.tablero[y][x].in[0].espera,
                             "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
                             "next": self.tablero[y][x].in[0].next
@@ -294,7 +297,7 @@ class Tablero {
         } else if (accion.next.accion = "disparar") {
             //console.log(">>>>>>>>>>>>>>", accion);
             if (accion.espera_disparo == 0) {
-                if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y)) {
+                if (this.Disparar(accion.x, accion.y, accion.next.objetivo_x, accion.next.objetivo_y)) {
                     this.tablero[accion.y][accion.x].in[0].Disparo();
                 }
             }
