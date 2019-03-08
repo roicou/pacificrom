@@ -76,6 +76,9 @@ class Personaje {
     update(map) {
         this._map = map;
     }
+    get map() {
+        return this._map;
+    }
     set espera(n) {
         this._espera = n;
     }
@@ -97,7 +100,7 @@ class Personaje {
      * @param {Function} funcionIA
      */
     get next() {
-        return this._funcionIA(this._map);
+        return this._funcionIA(this);
     }
     Disparo() {
         this._espera_disparo = this.cadencia;
