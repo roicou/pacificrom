@@ -286,7 +286,7 @@ class Tablero {
      */
     EjecutaAccion(accion) {
         if (accion.next.accion == "moverse") {
-            if (accion.espera == 0) {
+            if (accion.espera == 0 && this.tablero[accion.y][accion.x].in[0] != null) {
                 this.tablero[accion.y][accion.x].in[0]._espera = this.tablero[accion.y][accion.x].in[0].velocidad;
                 this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
             }
