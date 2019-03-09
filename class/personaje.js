@@ -14,6 +14,7 @@ class Personaje {
         this.orientacion = this.OrientacionAleatoria();
         this._espera = 0;
         this._espera_disparo = 0;
+        this._anteriores = [];
         switch (tipo) {
             case "barco1":
                 this.velocidad = 10;
@@ -95,6 +96,9 @@ class Personaje {
         return this._espera_disparo;
     }
 
+    get anteriores() {
+        return this._anteriores;
+    }
     /**
      * No sé muy bien cómo va esto XD
      * @param {Function} funcionIA

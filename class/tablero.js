@@ -255,7 +255,7 @@ class Tablero {
         for (let y = 0; y < this.tablero.length; y++) {
             tableropersonal.push([])
             for (let x = 0; x < this.tablero[y].length; x++) {
-                if (this.RadioAccion(y, x, posx, posy, this.tablero[posy][posx].in[0].rango)) {
+                if (this.RadioAccion(x, y, posx, posy, this.tablero[posy][posx].in[0].rango)) {
                     tableropersonal[y].push(this.tablero[y][x]);
                 } else {
                     tableropersonal[y].push(null);

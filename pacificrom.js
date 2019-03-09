@@ -14,7 +14,7 @@ let Personaje = require('./class/personaje.js');
 
 
 let partida = new Tablero.Tablero(8, 6);
-partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RoiIA));
+partida.ColocarPjAleatorio(new Personaje.Personaje('Roi', 'barco1', RoiIA2));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Emi', 'barco1', RandomAction));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Gabi', "barco1", RandomAction));
 partida.ColocarPjAleatorio(new Personaje.Personaje('Dieg', "diego", RandomAction));
@@ -40,12 +40,12 @@ function RandomAction() {
             direccion: OrientacionAleatoria()
         }
     }
-    return accion;
+    return {
+        accion: "moverse",
+        direccion: OrientacionAleatoria()
+    };
 }
 
-function RoiIA(roi) {
-    return {accion: "disparar"};
-}
 
 /**
  * @description Devuelve una orientación aleatoria: N, S, E, W
