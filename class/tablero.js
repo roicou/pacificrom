@@ -157,7 +157,7 @@ class Tablero {
                 }
             }
         }
-        self._acciones.sort((a, b) => { return b.espera - a.espera });
+        //self._acciones.sort((a, b) => { return b.espera - a.espera });
         self._balas.sort((a, b) => { return b.espera - a.espera });
 
         //console.log(self._balas);

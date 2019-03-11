@@ -65,6 +65,7 @@ function OrientacionAleatoria() {
 }
 
 
+
 /*
 setInterval pierde la referencia al objeto. Solo llama a la función, dejando a un lado el objeto en el que 
 estaba la función
