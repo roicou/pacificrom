@@ -33,6 +33,15 @@ app.post("/post/nuevopj", (req, res) => {
     barcos[id_personaje] = new Personaje.Personaje(req.body.nombre, req.body.barco, id_personaje);
     partida.ColocarPjAleatorio(barcos[id_personaje]);
     res.json({id: id_personaje});
+    partida.imprime;
+});
+
+app.get('/partida', (req, res) => {
+    res.send(partida);
+});
+
+app.get('/empezar_partida', (req, res) => {
+    setInterval(partida.Tick, 500, partida);
 });
 
 app.get('/1.0/get/req', (req, res) => {
