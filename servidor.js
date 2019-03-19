@@ -14,10 +14,14 @@
 
 let Tablero = require('./class/tablero.js');
 let Personaje = require('./class/personaje.js');
-let partida = new Tablero.Tablero(8, 6);
+let tablero = new Tablero.Tablero(20, 20);
+tablero.ColocarPjAleatorio(new Personaje.Personaje("Roi", "barco1"));
+
+tablero.ColocarPjAleatorio(new Personaje.Personaje("Roi", "barco1"));
+
+tablero.ColocarPjAleatorio(new Personaje.Personaje("Roi", "barco1"));
 
 var jwt = require('jsonwebtoken');
-let barcos = {};
 
 
 var express = require('express');
@@ -26,27 +30,48 @@ var app = express();
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
-app.post("/post/nuevopj", (req, res) => {
-    console.log("Recibida orden", req.body);
-    let id_personaje = jwt.sign('clave para pacific rom', 'esto es secreto');
-    barcos[id_personaje] = new Personaje.Personaje(req.body.nombre, req.body.barco, id_personaje);
-    partida.ColocarPjAleatorio(barcos[id_personaje]);
-    res.json({id: id_personaje});
-    partida.imprime;
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
+app.post("/crear_personaje", (req, res) => {
+    console.log("Recibida orden", req.body);
+    let id_personaje = jwt.sign('clave para pacific rom', 'esto es secreto');
+    let barco = new Personaje.Personaje(req.body.nombre, req.body.barco);
+    tablero.ColocarPjAleatorio(barco);
+    tablero.personajes[id_personaje] = barco;
+    res.json({ id: id_personaje });
+    tablero.imprime;
+});
+
+app.post("/ejecutar_accion", (req, res) => {
+    let id = req.body.id;
+    let accion = req.body.accion;
+    if (tablero.personajes[id]) {
+        tablero.personajes[id].actualizarAccion(accion);
+    }
+});
+
+app.post("/dame_personaje", (req, res) => {
+    let id = req.body.id;
+    if (tablero.personajes[id]) {
+        res.json(tablero.personajes[id]);
+    }
+})
+
 app.get('/partida', (req, res) => {
-    res.send(partida);
+    res.json(tablero.tablero);
 });
 
 app.get('/empezar_partida', (req, res) => {
-    setInterval(partida.Tick, 500, partida);
+    setInterval(tablero.Tick, 500, tablero);
 });
 
 app.get('/1.0/get/req', (req, res) => {
     console.log("Recibida request", req.query);
-    res.json({status: "Ok"});
+    res.json({ status: "Ok" });
 });
 
 app.listen(3000, () => {

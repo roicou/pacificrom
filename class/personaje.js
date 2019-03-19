@@ -7,14 +7,16 @@ class Personaje {
      * @param {Function} funcionIA Función con la IA del personake
      * @returns {Object} Objeto con los parámetros del personaje.
      */
-    constructor(nombre, tipo, funcionIA) {
+    constructor(nombre, tipo) {
         //disparo curvo y disparo tenso
-        this._funcionIA = funcionIA;
         this.nombre = nombre;
         this.orientacion = this.OrientacionAleatoria();
         this._espera = 0;
         this._espera_disparo = 0;
         this._anteriores = [];
+        this.x = 0;
+        this.y = 0;
+        this.next = {};
         switch (tipo) {
             case "barco1":
                 this.velocidad = 10;
@@ -99,15 +101,13 @@ class Personaje {
     get anteriores() {
         return this._anteriores;
     }
-    /**
-     * No sé muy bien cómo va esto XD
-     * @param {Function} funcionIA
-     */
-    get next() {
-        return this._funcionIA(this);
-    }
+
     Disparo() {
         this._espera_disparo = this.cadencia;
+    }
+
+    actualizarAccion(accion) {
+        this.next = accion;
     }
 }
 

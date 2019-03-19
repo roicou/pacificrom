@@ -8,8 +8,10 @@ class Tablero {
      * @param {number} columnas Número de columnas del tablero (Y)
      * @returns {Array}    
      */
-    constructor(filas, columnas) {
+    constructor(columnas, filas) {
         this.tablero = [];
+        this.personajes = {};
+        this._acciones = [];
         for (let y = 0; y < filas; y++) {
             this.tablero.push([]);
             for (let x = 0; x < columnas; x++) {
@@ -86,6 +88,8 @@ class Tablero {
         let posy = this.CoordenadasAleatorias(this.tablero.length);
         if (this.tablero[posy][posx].tipo == "agua" && this.tablero[posy][posx].in[0] == null) {
             this.tablero[posy][posx].in[0] = personaje;
+            personaje.x = posx;
+            personaje.y = posy;
         } else {
             this.ColocarPjAleatorio(personaje);
         }
@@ -106,7 +110,6 @@ class Tablero {
      * @param {Object} self Recibe el tablero de juego, porque al usar el setInterval se pierde.
      */
     Tick(self) {
-        self._acciones = [];
         self._balas = [];
         //console.log(self.tablero);
         for (let y = 0; y < self.tablero.length; y++) {
@@ -115,39 +118,17 @@ class Tablero {
                 if (self.tablero[y][x].in[0] != null) {
                     if (self.tablero[y][x].in[0].tipo == "kraken") {
                         self.tablero[y][x].in[0] = null;
-                    } else {
+                    } /*else {
                         self.tablero[y][x].in[0].update(self.VisionPersonaje(x, y));
-                        /*
-                        let objetivo_y = y;
-                        let objetivo_x = x;
-                        switch (self.tablero[y][x].in[0].orientacion) {
-                            case "N":
-                                objetivo_y = Math.floor(Math.random() * (y - 0) + 0);
-                                break;
-                            case "S":
-                                objetivo_y = Math.floor(Math.random() * ((self.tablero.length - 1) - y) + y);
-                                break;
-                            case "E":
-                                objetivo_x = Math.floor(Math.random() * (self.tablero[y].length - x) + x);
-                                break;
-                            case "W":
-                                objetivo_x = Math.floor(Math.random(0) * (x - 0) + 0);
-                                break;
-                        }
-                        */
                         self._acciones.push({
                             "x": x,
                             "y": y,
-                            /*
-                            "objetivo_x": objetivo_x,
-                            "objetivo_y": objetivo_y,
-                            */
                             "espera": self.tablero[y][x].in[0].espera,
-                            "espera_disparo": self.tablero[y][x].in[0].espera_disparo,
-                            "next": self.tablero[y][x].in[0].next
+                            "espera_disparo": self.tablero[y][x].in[0].espera_disparo
+                            //"next": self.tablero[y][x].in[0].next
 
                         });
-                    }
+                    }*/
                 }
                 if (self.tablero[y][x].in.length > 1) {
                     for (let i = 1; i < self.tablero[y][x].in.length; i++) {
@@ -171,10 +152,16 @@ class Tablero {
         }
 
         //console.log(self._acciones);
-
-        for (let i = self._acciones.length - 1; i >= 0; i--) {
-            self.EjecutaAccion(self._acciones[i]);
+        /*
+        for(let accion of self._acciones) {
+            self.EjecutaAccion(accion);
         }
+        */
+
+        for(let pj in self.personajes) {
+            self.EjecutaAccion(self.personajes[pj].next);
+        }
+
         self.Kraken();
         self.imprime;
     }
@@ -288,16 +275,16 @@ class Tablero {
      * @param {Object} accion El objeto con la acción del personaje
      */
     EjecutaAccion(accion) {
-        if (accion.next.accion == "moverse") {
+        if (accion.accion == "moverse") {
             if (accion.espera == 0 && this.tablero[accion.y][accion.x].in[0] != null) {
                 this.tablero[accion.y][accion.x].in[0]._espera = this.tablero[accion.y][accion.x].in[0].velocidad;
-                this.MoverPersonaje(accion.x, accion.y, accion.next.direccion);
+                this.MoverPersonaje(accion.x, accion.y, accion.direccion);
             }
             //console.log('eeeeeeee');
-        } else if (accion.next.accion = "disparar") {
+        } else if (accion.accion = "disparar") {
             //console.log(">>>>>>>>>>>>>>", accion);
             if (accion.espera_disparo == 0) {
-                if (this.Disparar(accion.x, accion.y, accion.next.objetivo_x, accion.next.objetivo_y)) {
+                if (this.Disparar(accion.x, accion.y, accion.objetivo_x, accion.objetivo_y)) {
                     this.tablero[accion.y][accion.x].in[0].Disparo();
                 }
             }
@@ -349,6 +336,8 @@ class Tablero {
             if (this.tablero[posy_final][posx_final].in[0] == null && this.tablero[posy_final][posx_final].tipo == "agua") {
                 this.tablero[posy_final][posx_final].in[0] = this.tablero[posy_original][posx_original].in[0];
                 this.tablero[posy_original][posx_original].in[0] = null;
+                this.tablero[posy_final][posx_final].in[0].x = posx_final;
+                this.tablero[posy_final][posx_final].in[0].y = posy_final;
             }
         }
     }

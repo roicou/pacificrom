@@ -1,0 +1,34 @@
+#tablero table td {
+    width: 30px;
+    height: 30px;
+    border:0;
+    margin: 0;
+    padding: 0;
+}
+#tablero table tr {
+    display:block;
+
+}
+#tablero table {
+    display:block;
+    border-collapse: collapse;    
+    border: 0;
+} 
+
+#tablero td.agua {
+    background-image: url("../images/agua.png");
+    background-size: 100%;
+}
+#tablero td.tierra {
+    background-image: url("../images/tierra.png");
+    background-size: 100%;
+}
+#tablero td.remolino {
+    background-color: grey;
+}
+#tablero td img {
+    max-width:28px;
+    max-height:28px;
+    margin: 0;
+    padding: 0;
+}
